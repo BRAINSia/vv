@@ -35,6 +35,8 @@ ENDIF(ITK_FOUND)
 # Find VTK (required)
 FIND_PACKAGE(VTK REQUIRED)
 IF(VTK_FOUND)
+  message("VTK_USE_FILE=${VTK_USE_FILE}")
+  message("VTK_INCLUDE_DIRS=${VTK_INCLUDE_DIRS}")
   INCLUDE("${VTK_USE_FILE}")
 ELSE(VTK_FOUND)
   MESSAGE(FATAL_ERROR "Please set VTK_DIR.")
@@ -85,12 +87,26 @@ ENDIF(MSVC)
 #=========================================================
 INCLUDE_DIRECTORIES(itk filters segmentation registration tools ${PROJECT_BINARY_DIR})
 
-# Select what is compiled
-ADD_SUBDIRECTORY(common)
-ADD_SUBDIRECTORY(tools)
-ADD_SUBDIRECTORY(segmentation)
-ADD_SUBDIRECTORY(registration)
+IF(NOT DEFINED CLITK_SOURCE_DIR)
+  SET(CLITK_SOURCE_DIR ${PROJECT_SOURCE_DIR})
+ENDIF(NOT DEFINED CLITK_SOURCE_DIR)
+#=========================================================
 
+SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+#=========================================================
+INCLUDE(${CLITK_SOURCE_DIR}/cmake/common.cmake)
+INCLUDE(${CLITK_SOURCE_DIR}/cmake/dependencies.cmake)
+INCLUDE(${CLITK_SOURCE_DIR}/cmake/build_opt.cmake)
+#=========================================================
+#=========================================================
+
+# Select what is compiled
+ADD_SUBDIRECTORY(${CLITK_SOURCE_DIR}/common ${PROJECT_BINARY_DIR}/common)
+ADD_SUBDIRECTORY(${CLITK_SOURCE_DIR}/tools ${PROJECT_BINARY_DIR}/tools)
+ADD_SUBDIRECTORY(${CLITK_SOURCE_DIR}/segmentation ${PROJECT_BINARY_DIR}/segmentation)
+ADD_SUBDIRECTORY(${CLITK_SOURCE_DIR}/registration ${PROJECT_BINARY_DIR}/registration)
+=======
 
 # Compilation options
 OPTION(CLITK_EXPERIMENTAL "Enable experimental software and features" OFF)

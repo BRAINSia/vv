@@ -1,27 +1,40 @@
-#=========================================================
-# CLITK = Command Line ITK
 cmake_minimum_required(VERSION 2.8)
 cmake_policy(VERSION 2.8)
 if(COMMAND cmake_policy)
     cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
-PROJECT(clitk)
-IF(NOT DEFINED CLITK_SOURCE_DIR)
-  SET(CLITK_SOURCE_DIR ${PROJECT_SOURCE_DIR})
-ENDIF(NOT DEFINED CLITK_SOURCE_DIR)
-#=========================================================
+## NOTE THERE SHOULD BE NO PROJECT STATEMENT HERE!
+## This file acts as a simple switch to initiate
+## two completely independant CMake build environments.
 
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+#-----------------------------------------------------------------------------
+# Superbuild Option - Enabled by default
+#                   Phase I:  VV_SUPERBUILD is set to ON, and the
+#                             supporting packages defined in "SuperBuild.cmake"
+#                             are built.  The last package in "SuperBuild.cmake"
+#                             to be built is a recursive call to this
+#                             file with VV_SUPERBUILD explicitly
+#                             set to "OFF" to initiate Phase II
+#
+#                   Phase II: Build the VV, referencing the support
+#                             packages built in Phase I.
+#-----------------------------------------------------------------------------
+option(VV_SUPERBUILD "Build VV and the projects it depends on via SuperBuild.cmake." ON)
+mark_as_advanced(VV_SUPERBUILD)
 
-#=========================================================
-INCLUDE(${CLITK_SOURCE_DIR}/cmake/common.cmake)
-INCLUDE(${CLITK_SOURCE_DIR}/cmake/dependencies.cmake)
-INCLUDE(${CLITK_SOURCE_DIR}/cmake/build_opt.cmake)
-#=========================================================
-#=========================================================
+include(ExternalProject)
 
-# Select what is compiled
-ADD_SUBDIRECTORY(${CLITK_SOURCE_DIR}/common ${PROJECT_BINARY_DIR}/common)
-ADD_SUBDIRECTORY(${CLITK_SOURCE_DIR}/tools ${PROJECT_BINARY_DIR}/tools)
-ADD_SUBDIRECTORY(${CLITK_SOURCE_DIR}/segmentation ${PROJECT_BINARY_DIR}/segmentation)
-ADD_SUBDIRECTORY(${CLITK_SOURCE_DIR}/registration ${PROJECT_BINARY_DIR}/registration)
+#-----------------------------------------------------------------------------
+# Superbuild script
+#-----------------------------------------------------------------------------
+if(VV_SUPERBUILD)
+  project(SuperBuild_VV)
+  include("${CMAKE_CURRENT_SOURCE_DIR}/SuperBuild.cmake")
+  return()
+else()
+  project(VV)
+  include("${CMAKE_CURRENT_SOURCE_DIR}/VV.cmake")
+  return()
+endif()
+
+message(FATAL_ERROR "You should never reach this point !")
