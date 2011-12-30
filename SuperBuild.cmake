@@ -19,11 +19,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR}/SuperBuild)
 set(${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARS)
 
 # The macro '_expand_external_project_vars' can be used to expand the list of <EP_VAR>.
-set(${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_ARGS) # List of CMake args to configure BRAINS
+set(${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARS) # List of CMake args to configure BRAINS
 set(${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARNAMES) # List of CMake variable names
 
 # Convenient macro allowing to expand the list of EP_VAR listed in ${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARS
-# The expanded arguments will be appended to the list ${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_ARGS
+# The expanded arguments will be appended to the list ${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARS
 # Similarly the name of the EP_VARs will be appended to the list ${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARNAMES.
 macro(_expand_external_project_vars)
   foreach(arg ${${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARS})
@@ -31,7 +31,7 @@ macro(_expand_external_project_vars)
     set(target_info_list ${target_info_list})
     list(GET varname_and_vartype 0 _varname)
     list(GET varname_and_vartype 1 _vartype)
-    list(APPEND ${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_ARGS -D${_varname}:${_vartype}=${${_varname}})
+    list(APPEND ${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARS -D${_varname}:${_vartype}=${${_varname}})
     list(APPEND ${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARNAMES ${_varname})
   endforeach()
 endmacro()
@@ -99,7 +99,7 @@ ExternalProject_Add(${proj}
   CMAKE_GENERATOR ${gen}
   CMAKE_ARGS
     --no-warn-unused-cli # HACK Only expected variables should be passed down.
-    ${${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_ARGS}
+    ${${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARS}
     -DVV_SUPERBUILD:BOOL=OFF
     -DITK_DIR:PATH=${ITK_DIR}
     -DVTK_DIR:PATH=${VTK_DIR}
