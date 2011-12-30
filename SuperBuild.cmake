@@ -70,6 +70,7 @@ list(APPEND ${CMAKE_PROJECT_NAME}_SUPERBUILD_EP_VARS
   CMAKE_MODULE_LINKER_FLAGS:STRING
   SITE:STRING
   BUILDNAME:STRING
+  QT_QMAKE_EXECUTABLE:FILEPATH
   )
 #-----------------------------------------------------------------------------
 # Set CMake OSX variable to pass down the external project
