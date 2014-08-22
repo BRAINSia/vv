@@ -35,7 +35,7 @@ ExternalProject_Add(${proj}
   SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj}
   BINARY_DIR ${VTK_DIR}
   GIT_REPOSITORY "git://vtk.org/VTK.git"
-  GIT_TAG "v5.8.0"
+  GIT_TAG "v6.1.0"
   UPDATE_COMMAND ""
   INSTALL_COMMAND ""
   CMAKE_ARGS
