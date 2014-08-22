@@ -11,12 +11,12 @@ if (NOT CMAKE_BUILD_TYPE)
 endif (NOT CMAKE_BUILD_TYPE)
 
 #=========================================================
-include_directories(${CLITK_SOURCE_DIR}/itk
-  ${CLITK_SOURCE_DIR}/filters
-  ${CLITK_SOURCE_DIR}/segmentation
-  ${CLITK_SOURCE_DIR}/registration
-  ${CLITK_SOURCE_DIR}/tools
-  ${CLITK_SOURCE_DIR}/common
+include_directories(${VV_SOURCE_DIR}/itk
+  ${VV_SOURCE_DIR}/filters
+  ${VV_SOURCE_DIR}/segmentation
+  ${VV_SOURCE_DIR}/registration
+  ${VV_SOURCE_DIR}/tools
+  ${VV_SOURCE_DIR}/common
   ${PROJECT_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
@@ -30,7 +30,7 @@ include_directories(${PROJECT_BINARY_DIR}/registration)  #For _ggo.h includes fr
 # Building in the source tree is forbidden
 if(PROJECT_BINARY_DIR STREQUAL ${PROJECT_SOURCE_DIR})
   message(FATAL_ERROR "Building in the source tree is not allowed ! Quit; remove the file 'CMakeCache.txt' and the folder 'CMakeFiles' an
-d build outside the sources (for example 'mkdir build ; cmake <CLITK_DIR>'.")
+d build outside the sources (for example 'mkdir build ; cmake <VV_DIR>'.")
 endif(PROJECT_BINARY_DIR STREQUAL ${PROJECT_SOURCE_DIR})
 #=========================================================
 

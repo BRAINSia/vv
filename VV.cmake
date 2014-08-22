@@ -10,7 +10,6 @@ PROJECT(clitk)
 
 #=========================================================
 INCLUDE(cmake/common.cmake)
-#=========================================================
 
 #=========================================================
 #Support for the CTest dashboard testing system
@@ -86,11 +85,12 @@ ENDIF(MSVC)
 INCLUDE_DIRECTORIES(itk filters segmentation registration tools ${PROJECT_BINARY_DIR})
 
 # Select what is compiled
+
 ADD_SUBDIRECTORY(common)
 ADD_SUBDIRECTORY(tools)
 ADD_SUBDIRECTORY(segmentation)
 ADD_SUBDIRECTORY(registration)
-
+ADD_SUBDIRECTORY(cluster_tools)
 
 # Compilation options
 OPTION(CLITK_EXPERIMENTAL "Enable experimental software and features" OFF)
