@@ -62,7 +62,7 @@ class vvSlicer: public vtkImageViewer2
 {
 public:
   static vvSlicer *New();
-  vtkTypeRevisionMacro(vvSlicer,vtkImageViewer2);
+  vtkTypeMacro(vvSlicer,vtkImageViewer2);
   void PrintSelf(ostream& os, vtkIndent indent);
 
   void SetImage(vvImage::Pointer inputImages);
@@ -278,6 +278,7 @@ protected:
   bool mUseReducedExtent;
   int * mReducedExtent;
   int * mInitialExtent;
+  int   mTempExtent[6];
   bool mLinkOverlayWindowLevel;
   bool showFusionLegend;
 

@@ -276,7 +276,7 @@ void clitk::DicomRT_ROI::ComputeMeshFromContour()
 {
   vtkSmartPointer<vtkAppendPolyData> append = vtkSmartPointer<vtkAppendPolyData>::New();
   for(unsigned int i=0; i<mListOfContours.size(); i++) {
-    append->AddInput(mListOfContours[i]->GetMesh());
+    append->AddInputData(mListOfContours[i]->GetMesh());
   }
   append->Update();
  
@@ -394,7 +394,7 @@ void clitk::DicomRT_ROI::ComputeContoursFromImage()
   
   // Get initial extend for the clipping
   vtkSmartPointer<vtkImageClip> clipper = vtkSmartPointer<vtkImageClip>::New();
-  clipper->SetInput(image);
+  clipper->SetInputData(image);
   int* extent = image->GetExtent();
   DDV(extent, 6);
   //  std::vector<int> extend;
@@ -414,7 +414,7 @@ void clitk::DicomRT_ROI::ComputeContoursFromImage()
 
 
     vtkSmartPointer<vtkMarchingSquares> squares = vtkSmartPointer<vtkMarchingSquares>::New();
-    squares->SetInput(image);
+    squares->SetInputData(image);
     squares->SetImageRange(extent[0], extent[1], extent[2], extent[3], i, i);
     squares->SetValue(1, 1.0);
     squares->Update();
@@ -446,7 +446,7 @@ void clitk::DicomRT_ROI::ComputeContoursFromImage()
  
   vtkSmartPointer<vtkAppendPolyData> append = vtkSmartPointer<vtkAppendPolyData>::New();
   for(unsigned int i=0; i<n; i++) {
-    append->AddInput(contours[i]);
+    append->AddInputData(contours[i]);
   }
   append->Update();
  
@@ -455,7 +455,7 @@ void clitk::DicomRT_ROI::ComputeContoursFromImage()
   
   // Write vtk
   vtkPolyDataWriter * w = vtkPolyDataWriter::New();
-  w->SetInput(mMesh);
+  w->SetInputData(mMesh);
   w->SetFileName("toto.vtk");
   w->Write();
 

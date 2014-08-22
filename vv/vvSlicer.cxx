@@ -69,12 +69,14 @@
 #include <vtkAssignAttribute.h>
 #include <vtkImageAccumulate.h>
 #include <vtkImageReslice.h>
+#include <vtkInformation.h>
+#include <vtkStreamingDemandDrivenPipeline.h>
+
 #if VTK_MAJOR_VERSION >= 6 || (VTK_MAJOR_VERSION >= 5 && VTK_MINOR_VERSION >= 10)
 #  include <vtkImageMapper3D.h>
 #  include <vtkImageSliceMapper.h>
 #endif
 
-vtkCxxRevisionMacro(vvSlicer, "DummyRevision");
 vtkStandardNewMacro(vvSlicer);
 static void copyExtent(int* in, int* to){
  for(int i=0; i<6; ++i) to[i]=in[i]; 
@@ -115,7 +117,7 @@ vvSlicer::vvSlicer()
   crossCursor->SetRadius(2);
 
   pdm = vtkSmartPointer<vtkPolyDataMapper2D>::New();
-  pdm->SetInput(crossCursor->GetOutput());
+  pdm->SetInputData(crossCursor->GetOutput());
 
   pdmA = vtkSmartPointer<vtkActor2D>::New();
   pdmA->SetMapper(pdm);
@@ -337,13 +339,14 @@ void vvSlicer::SetImage(vvImage::Pointer image)
     mConcatenatedTransform->Concatenate(mImage->GetTransform()[0]);
     mConcatenatedTransform->Concatenate(mSlicingTransform);
     mImageReslice->SetResliceTransform(mConcatenatedTransform);
-    mImageReslice->SetInput(0, mImage->GetFirstVTKImageData());
+    mImageReslice->SetInputData(0, mImage->GetFirstVTKImageData());
     mImageReslice->UpdateInformation();
 
-    this->Superclass::SetInput(mImageReslice->GetOutput());
+    this->Superclass::SetInputData(mImageReslice->GetOutput());
 
     int extent[6];
-    this->GetInput()->GetWholeExtent(extent);
+    this->GetInput()->GetInformation()->Set(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(),
+                                            extent, 6);
 
     // Prevent crash when reload -> change slice if outside extent
     if (Slice < extent[SliceOrientation*2] || Slice>=extent[SliceOrientation*2+1]) {
@@ -353,8 +356,9 @@ void vvSlicer::SetImage(vvImage::Pointer image)
     // Make sure that the required part image has been computed
     extent[SliceOrientation*2] = Slice;
     extent[SliceOrientation*2+1] = Slice;
-    mImageReslice->GetOutput()->SetUpdateExtent(extent);
-    mImageReslice->GetOutput()->Update();
+    mImageReslice->GetOutput()->GetInformation()->
+      Set(vtkStreamingDemandDrivenPipeline::UPDATE_EXTENT(), extent, 6);
+    mImageReslice->Update();
 
     this->UpdateDisplayExtent();
 
@@ -383,16 +387,16 @@ void vvSlicer::SetOverlay(vvImage::Pointer overlay)
     mConcatenatedOverlayTransform->Concatenate(mOverlay->GetTransform()[0]);
     mConcatenatedOverlayTransform->Concatenate(mSlicingTransform);
     mOverlayReslice->SetResliceTransform(mConcatenatedOverlayTransform);
-    mOverlayReslice->SetInput(0, mOverlay->GetFirstVTKImageData());
+    mOverlayReslice->SetInputData(0, mOverlay->GetFirstVTKImageData());
     mImageReslice->UpdateInformation();
 
     if (!mOverlayMapper)
       mOverlayMapper = vtkSmartPointer<vtkImageMapToWindowLevelColors>::New();
-    mOverlayMapper->SetInput(mOverlayReslice->GetOutput());
+    mOverlayMapper->SetInputData(mOverlayReslice->GetOutput());
 
     if (!mOverlayActor) {
       mOverlayActor = vtkSmartPointer<vvBlendImageActor>::New();
-      mOverlayActor->SetInput(mOverlayMapper->GetOutput());
+      mOverlayActor->SetInputData(mOverlayMapper->GetOutput());
       mOverlayActor->SetPickable(0);
       mOverlayActor->SetVisibility(true);
       mOverlayActor->SetOpacity(0.5);
@@ -437,7 +441,7 @@ void vvSlicer::SetFusion(vvImage::Pointer fusion, int fusionSequenceCode)
     mConcatenatedFusionTransform->Concatenate(mFusion->GetTransform()[0]);
     mConcatenatedFusionTransform->Concatenate(mSlicingTransform);
     mFusionReslice->SetResliceTransform(mConcatenatedFusionTransform);
-    mFusionReslice->SetInput(0, mFusion->GetFirstVTKImageData());
+    mFusionReslice->SetInputData(0, mFusion->GetFirstVTKImageData());
     mFusionReslice->UpdateInformation();
 
     if (!mFusionMapper)
@@ -449,11 +453,11 @@ void vvSlicer::SetFusion(vvImage::Pointer fusion, int fusionSequenceCode)
     lut->SetSaturationRange(0, 0);
     lut->Build();
     mFusionMapper->SetLookupTable(lut);
-    mFusionMapper->SetInput(mFusionReslice->GetOutput());
+    mFusionMapper->SetInputData(mFusionReslice->GetOutput());
 
     if (!mFusionActor) {
       mFusionActor = vtkSmartPointer<vtkImageActor>::New();
-      mFusionActor->SetInput(mFusionMapper->GetOutput());
+      mFusionActor->SetInputData(mFusionMapper->GetOutput());
       mFusionActor->SetPickable(0);
       mFusionActor->SetVisibility(true);
       mFusionActor->SetOpacity(0.7);
@@ -519,8 +523,8 @@ void vvSlicer::SetVF(vvImage::Pointer vf)
       mVOIFilter = vtkSmartPointer<vtkExtractVOI>::New();
       mVOIFilter->SetSampleRate(mSubSampling,mSubSampling,mSubSampling);
     }
-    mVOIFilter->SetInput(vf->GetFirstVTKImageData());
-    mAAFilter->SetInput(mVOIFilter->GetOutput());
+    mVOIFilter->SetInputData(vf->GetFirstVTKImageData());
+    mAAFilter->SetInputData(mVOIFilter->GetOutput());
     ///This tells VTK to use the scalar (pixel) data of the image to draw the little arrows
     mAAFilter->Assign(vtkDataSetAttributes::SCALARS, vtkDataSetAttributes::VECTORS, vtkAssignAttribute::POINT_DATA);
 
@@ -533,8 +537,8 @@ void vvSlicer::SetVF(vvImage::Pointer vf)
     // Glyph the gradient vector (with arrows)
     if (!mGlyphFilter)
       mGlyphFilter = vtkSmartPointer<vvGlyph2D>::New();
-    mGlyphFilter->SetInput(mAAFilter->GetOutput());
-    mGlyphFilter->SetSource(mArrow->GetOutput());
+    mGlyphFilter->SetInputData(mAAFilter->GetOutput());
+    mGlyphFilter->SetSourceData(mArrow->GetOutput());
     mGlyphFilter->ScalingOn();
     mGlyphFilter->SetScaleModeToScaleByVector();
     mGlyphFilter->OrientOn();
@@ -552,7 +556,7 @@ void vvSlicer::SetVF(vvImage::Pointer vf)
 
     if (!mVFMapper)
       mVFMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-    mVFMapper->SetInput(mGlyphFilter->GetOutput());
+    mVFMapper->SetInputData(mGlyphFilter->GetOutput());
     mVFMapper->ImmediateModeRenderingOn();
     mVFMapper->SetLookupTable(mVFColorLUT);
 
@@ -597,10 +601,10 @@ void vvSlicer::SetLandmarks(vvLandmarks* landmarks)
 
     mLandClipper->SetClipFunction(mClipBox);
     mLandClipper->InsideOutOn();
-    mLandClipper->SetInput(mLandmarks->GetOutput());
+    mLandClipper->SetInputData(mLandmarks->GetOutput());
 
-    mLandGlyph->SetSource(mCross->GetOutput());
-    mLandGlyph->SetInput(mLandClipper->GetOutput());
+    mLandGlyph->SetSourceData(mCross->GetOutput());
+    mLandGlyph->SetInputData(mLandClipper->GetOutput());
     //mLandGlyph->SetIndexModeToScalar();
     //mLandGlyph->SetRange(0,1);
     //mLandGlyph->ScalingOff();
@@ -712,7 +716,7 @@ void vvSlicer::SetTSlice(int t, bool updateLinkedImages)
 {
 	if (!updateLinkedImages) {
 		mCurrentTSlice = t;
-		mImageReslice->SetInput( mImage->GetVTKImages()[mCurrentTSlice] );
+		mImageReslice->SetInputData( mImage->GetVTKImages()[mCurrentTSlice] );
 		// Update transform
 		mConcatenatedTransform->Identity();
 		mConcatenatedTransform->Concatenate(mImage->GetTransform()[mCurrentTSlice]);
@@ -734,16 +738,16 @@ void vvSlicer::SetTSlice(int t, bool updateLinkedImages)
   mConcatenatedTransform->Concatenate(mSlicingTransform);
 
   // Update image data
-  mImageReslice->SetInput( mImage->GetVTKImages()[mCurrentTSlice] );
+  mImageReslice->SetInputData( mImage->GetVTKImages()[mCurrentTSlice] );
   if (mVF && mVFActor->GetVisibility()) {
     if (mVF->GetVTKImages().size() > (unsigned int)mCurrentTSlice)
-      mVOIFilter->SetInput(mVF->GetVTKImages()[mCurrentTSlice]);
+      mVOIFilter->SetInputData(mVF->GetVTKImages()[mCurrentTSlice]);
   }
   //update the overlay
   if (mOverlay && mOverlayActor->GetVisibility()) {
     if (mOverlay->GetVTKImages().size() > (unsigned int)t) {
       mCurrentOverlayTSlice = t;
-      mOverlayReslice->SetInput( mOverlay->GetVTKImages()[mCurrentOverlayTSlice] );
+      mOverlayReslice->SetInputData( mOverlay->GetVTKImages()[mCurrentOverlayTSlice] );
 
       // Update overlay transform
       mConcatenatedOverlayTransform->Identity();
@@ -755,7 +759,7 @@ void vvSlicer::SetTSlice(int t, bool updateLinkedImages)
   if (mFusion && mFusionActor->GetVisibility() && (mFusionSequenceCode<0)) {
     if (mFusion->GetVTKImages().size() > (unsigned int)t) {
       mCurrentFusionTSlice = t;
-      mFusionReslice->SetInput( mFusion->GetVTKImages()[mCurrentFusionTSlice]);
+      mFusionReslice->SetInputData( mFusion->GetVTKImages()[mCurrentFusionTSlice]);
 
       // Update fusion transform
       mConcatenatedFusionTransform->Identity();
@@ -778,7 +782,7 @@ void vvSlicer::SetFusionSequenceTSlice(int t)
   if (mFusion && mFusionActor->GetVisibility() && (mFusionSequenceCode>=0)) {
     if (mFusion->GetVTKImages().size() > (unsigned int)t) {
       mCurrentFusionTSlice = t;
-      mFusionReslice->SetInput( mFusion->GetVTKImages()[mCurrentFusionTSlice] );
+      mFusionReslice->SetInputData( mFusion->GetVTKImages()[mCurrentFusionTSlice] );
       // Update fusion transform
       mConcatenatedFusionTransform->Identity();
       mConcatenatedFusionTransform->Concatenate(mFusion->GetTransform()[mCurrentFusionTSlice]); //not really useful...
@@ -829,7 +833,8 @@ void vvSlicer::SetSliceOrientation(int orientation)
 {
   //if 2D image, force to watch in Axial View
   int extent[6];
-  this->GetInput()->GetWholeExtent(extent);
+  this->GetInput()->GetInformation()->
+    Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), extent);
   if (extent[5]-extent[4] <= 2)
     orientation = vtkImageViewer2::SLICE_ORIENTATION_XY;
 
@@ -889,7 +894,7 @@ void vvSlicer::AdjustResliceToSliceOrientation(vtkImageReslice *reslice)
   // Reset autocrop and update output information
   reslice->SetOutputOriginToDefault();
   reslice->SetOutputSpacingToDefault();
-  reslice->GetOutput()->UpdateInformation();
+  reslice->UpdateInformation();
 
   // Ge new origin / spacing
   double origin[3];
@@ -919,16 +924,23 @@ void vvSlicer::AdjustResliceToSliceOrientation(vtkImageReslice *reslice)
   reslice->SetOutputOrigin(origin);
   reslice->SetOutputSpacing(spacing);
   reslice->UpdateInformation();
-  reslice->GetOutput()->UpdateInformation();
+  reslice->UpdateInformation();
 }
 //------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
 int * vvSlicer::GetExtent(){
   int *w_ext;
-  if (mUseReducedExtent) {
+  if (mUseReducedExtent)
+    {
     w_ext = mReducedExtent;
-  } else w_ext = GetInput()->GetWholeExtent();
+    }
+  else
+    {
+    GetInput()->GetInformation()->Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(),
+                                      mTempExtent);
+    w_ext = mTempExtent;
+    }
   return w_ext;
 }
 //----------------------------------------------------------------------------
@@ -949,7 +961,6 @@ void vvSlicer::UpdateDisplayExtent()
   if (!input || !this->ImageActor) {
     return;
   }
-  input->UpdateInformation();
   this->SetSlice( this->GetSlice() ); //SR: make sure the update let the slice in extents
 
   // Local copy of extent
@@ -973,7 +984,14 @@ void vvSlicer::UpdateDisplayExtent()
     AdjustResliceToSliceOrientation(mOverlayReslice);
     int overExtent[6];
     this->ConvertImageToImageDisplayExtent(input, w_ext, mOverlayReslice->GetOutput(), overExtent);
-    bool out = ClipDisplayedExtent(overExtent, mOverlayMapper->GetInput()->GetWholeExtent());
+    bool out;
+    {
+    int _ext[6];
+    mOverlayMapper->GetInput()->GetInformation()->
+      Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(),
+          _ext);
+    out = ClipDisplayedExtent(overExtent, _ext);
+    }
     mOverlayActor->SetVisibility(!out);
     mOverlayActor->SetDisplayExtent( overExtent );
 #if VTK_MAJOR_VERSION >= 6 || (VTK_MAJOR_VERSION >= 5 && VTK_MINOR_VERSION >= 10)
@@ -989,7 +1007,14 @@ void vvSlicer::UpdateDisplayExtent()
     AdjustResliceToSliceOrientation(mFusionReslice);
     int fusExtent[6];
     this->ConvertImageToImageDisplayExtent(input, w_ext, mFusionReslice->GetOutput(), fusExtent);
-    bool out = ClipDisplayedExtent(fusExtent, mFusionMapper->GetInput()->GetWholeExtent());
+    bool out;
+    {
+    int _ext[6];
+    mFusionMapper->GetInput()->GetInformation()->
+      Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(),
+          _ext);
+    out = ClipDisplayedExtent(fusExtent,_ext);
+    }
     mFusionActor->SetVisibility(!out);
     mFusionActor->SetDisplayExtent( fusExtent );
 #if VTK_MAJOR_VERSION >= 6 || (VTK_MAJOR_VERSION >= 5 && VTK_MINOR_VERSION >= 10)
@@ -1018,11 +1043,15 @@ void vvSlicer::UpdateDisplayExtent()
   if (camera[this->SliceOrientation] < image_bounds[this->SliceOrientation*2])
     offset = -1;
   
-  if (mVF && mVFVisibility) {
+  if (mVF && mVFVisibility)
+    {
     int vfExtent[6];
-    mVF->GetVTKImages()[0]->UpdateInformation();
+
     this->ConvertImageToImageDisplayExtent(input, w_ext, mVF->GetVTKImages()[0], vfExtent);
-    bool out = ClipDisplayedExtent(vfExtent, mVOIFilter->GetInput()->GetWholeExtent());
+    int extent[6];
+    mVOIFilter->GetInput()->GetInformation()->Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(),
+                                                  extent);
+    bool out = ClipDisplayedExtent(vfExtent, extent);
     mVFActor->SetVisibility(!out);
     mVOIFilter->SetVOI(vfExtent);
     int orientation[3] = {1,1,1};
@@ -1032,7 +1061,7 @@ void vvSlicer::UpdateDisplayExtent()
 
     position[this->SliceOrientation] += offset;
     mVFActor->SetPosition(position);
-  }
+    }
   else if(mVF)
     mVFActor->SetVisibility(false);
 
@@ -1360,7 +1389,7 @@ void vvSlicer::GetExtremasAroundMousePointer(double & min, double & max, vtkImag
   }
 
   vtkSmartPointer<vtkExtractVOI> voiFilter = vtkSmartPointer<vtkExtractVOI>::New();
-  voiFilter->SetInput(image);
+  voiFilter->SetInputData(image);
   voiFilter->SetVOI(iLocalExtents);
   voiFilter->Update();
   if (!voiFilter->GetOutput()->GetNumberOfPoints()) {
@@ -1370,7 +1399,7 @@ void vvSlicer::GetExtremasAroundMousePointer(double & min, double & max, vtkImag
   }
 
   vtkSmartPointer<vtkImageAccumulate> accFilter = vtkSmartPointer<vtkImageAccumulate>::New();
-  accFilter->SetInput(voiFilter->GetOutput());
+  accFilter->SetInputData(voiFilter->GetOutput());
   accFilter->Update();
 
   min = *(accFilter->GetMin());
@@ -1384,17 +1413,29 @@ double vvSlicer::GetScalarComponentAsDouble(vtkImageData *image, double X, doubl
   ix = lrint(X);
   iy = lrint(Y);
   iz = lrint(Z);
-
-  if (ix < image->GetWholeExtent()[0] ||
-      ix > image->GetWholeExtent()[1] ||
-      iy < image->GetWholeExtent()[2] ||
-      iy > image->GetWholeExtent()[3] ||
-      iz < image->GetWholeExtent()[4] ||
-      iz > image->GetWholeExtent()[5] )
+  int extent[6];
+  image->GetInformation()->Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), extent);
+  if (ix < extent[0] ||
+      ix > extent[1] ||
+      iy < extent[2] ||
+      iy > extent[3] ||
+      iz < extent[4] ||
+      iz > extent[5] )
+    {
     return std::numeric_limits<double>::quiet_NaN();
+    }
+  else
+    {
+    extent[0] = ix;
+    extent[1] = ix;
+    extent[2] = iy;
+    extent[3] = iy;
+    extent[4] = iz;
+    extent[5] = iz;
+    }
 
-  image->SetUpdateExtent(ix, ix, iy, iy, iz, iz);
-  image->Update();
+  image->GetInformation()->Set(vtkStreamingDemandDrivenPipeline::UPDATE_EXTENT(),
+                               extent, 6);
   return image->GetScalarComponentAsDouble(ix, iy, iz, component);
 }
 //----------------------------------------------------------------------------
@@ -1421,12 +1462,15 @@ void vvSlicer::Render()
     double Y = (pt[1] - mImage->GetVTKImages()[mCurrentTSlice]->GetOrigin()[1])/mImage->GetVTKImages()[mCurrentTSlice]->GetSpacing()[1];
     double Z = (pt[2] - mImage->GetVTKImages()[mCurrentTSlice]->GetOrigin()[2])/mImage->GetVTKImages()[mCurrentTSlice]->GetSpacing()[2];
 
-    if (X >= mImage->GetVTKImages()[mCurrentTSlice]->GetWholeExtent()[0]-0.5 &&
-        X <= mImage->GetVTKImages()[mCurrentTSlice]->GetWholeExtent()[1]+0.5 &&
-        Y >= mImage->GetVTKImages()[mCurrentTSlice]->GetWholeExtent()[2]-0.5 &&
-        Y <= mImage->GetVTKImages()[mCurrentTSlice]->GetWholeExtent()[3]+0.5 &&
-        Z >= mImage->GetVTKImages()[mCurrentTSlice]->GetWholeExtent()[4]-0.5 &&
-        Z <= mImage->GetVTKImages()[mCurrentTSlice]->GetWholeExtent()[5]+0.5) {
+    int extent[6];
+    mImage->GetVTKImages()[mCurrentTSlice]->GetInformation()->Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(),
+                                                extent);
+    if (X >= extent[0]-0.5 &&
+        X <= extent[1]+0.5 &&
+        Y >= extent[2]-0.5 &&
+        Y <= extent[3]+0.5 &&
+        Z >= extent[4]-0.5 &&
+        Z <= extent[5]+0.5) {
 
       
       int ix, iy, iz;
@@ -1485,8 +1529,10 @@ void vvSlicer::Render()
       mOverlayMapper->SetWindow(this->GetColorWindow());
       mOverlayMapper->SetLevel(this->GetColorLevel());
     }
-    mOverlayMapper->GetOutput()->SetUpdateExtent(mOverlayActor->GetDisplayExtent());
-    mOverlayMapper->GetOutput()->Update();
+    int extent[6];
+    mOverlayActor->GetDisplayExtent(extent);
+    mOverlayMapper->GetOutput()->GetInformation()->
+      Set(vtkStreamingDemandDrivenPipeline::UPDATE_EXTENT(),extent,6);
     mOverlayMapper->Update();
   }
   if (mLandMapper)

@@ -34,7 +34,6 @@
 #include <sys/stat.h>
 
 //----------------------------------------------------------------------------
-vtkCxxRevisionMacro(vtkVOXImageWriter, "DummyRevision");
 vtkStandardNewMacro(vtkVOXImageWriter);
 
 //----------------------------------------------------------------------------

@@ -133,7 +133,7 @@ void vvDeformableRegistration::run()
   for (unsigned int i=0; i<images.size(); i++) {
     std::stringstream filename;
     filename << temp_dir << "/temp_" << i << ".vox";
-    vox->SetInput(images[i]);
+    vox->SetInputData(images[i]);
     vox->SetFileName(filename.str().c_str());
     if (i==refimage)
       ref_file=filename.str();

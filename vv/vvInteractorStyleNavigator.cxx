@@ -30,7 +30,6 @@
 #include "clitkCommon.h"
 
 
-vtkCxxRevisionMacro(vvInteractorStyleNavigator, "DummyRevision");
 vtkStandardNewMacro(vvInteractorStyleNavigator);
 
 //----------------------------------------------------------------------------

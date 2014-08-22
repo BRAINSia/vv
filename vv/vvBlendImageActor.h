@@ -21,7 +21,7 @@
 
 #include <vtkActor.h>
 #include <vtkSmartPointer.h>
-
+#include <vtkVersion.h>
 #if VTK_MAJOR_VERSION >= 6 || (VTK_MAJOR_VERSION >= 5 && VTK_MINOR_VERSION >= 10)
 #define VTK_IMAGE_ACTOR vtkImageActor
 #include <vtkImageActor.h>

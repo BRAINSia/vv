@@ -199,20 +199,23 @@ void clitk::DicomRTStruct2ImageFilter::Update()
 
   // Create new output image
   mBinaryImage = vtkSmartPointer<vtkImageData>::New();
-  mBinaryImage->SetScalarTypeToUnsignedChar();
+  //mBinaryImage->SetScalarTypeToUnsignedChar();
+  vtkDataObject::SetPointDataActiveScalarInfo(mBinaryImage->GetInformation(),
+                                              VTK_UNSIGNED_CHAR,1);
   mBinaryImage->SetOrigin(&origin[0]);
   mBinaryImage->SetSpacing(&mSpacing[0]);
   mBinaryImage->SetExtent(0, extend[0],
                           0, extend[1],
                           0, extend[2]);
-  mBinaryImage->AllocateScalars();
+  // mBinaryImage->AllocateScalars();
+  mBinaryImage->AllocateScalars(mBinaryImage->GetInformation());
 
   memset(mBinaryImage->GetScalarPointer(), 0,
          mBinaryImage->GetDimensions()[0]*mBinaryImage->GetDimensions()[1]*mBinaryImage->GetDimensions()[2]*sizeof(unsigned char));
 
   // Extrude
   vtkSmartPointer<vtkLinearExtrusionFilter> extrude=vtkSmartPointer<vtkLinearExtrusionFilter>::New();
-  extrude->SetInput(mesh);
+  extrude->SetInputData(mesh);
   ///We extrude in the -slice_spacing direction to respect the FOCAL convention (NEEDED !)
   extrude->SetVector(0, 0, -mSpacing[2]);
 
@@ -222,12 +225,12 @@ void clitk::DicomRTStruct2ImageFilter::Update()
   //http://www.nabble.com/Bug-in-vtkPolyDataToImageStencil--td23368312.html#a23370933
   sts->SetTolerance(0);
   sts->SetInformationInput(mBinaryImage);
-  sts->SetInput(extrude->GetOutput());
+  sts->SetInputData(extrude->GetOutput());
   //sts->SetInput(mesh);
 
   vtkSmartPointer<vtkImageStencil> stencil=vtkSmartPointer<vtkImageStencil>::New();
-  stencil->SetStencil(sts->GetOutput());
-  stencil->SetInput(mBinaryImage);
+  stencil->SetStencilData(sts->GetOutput());
+  stencil->SetInputData(mBinaryImage);
   stencil->ReverseStencilOn();
   stencil->Update();
 

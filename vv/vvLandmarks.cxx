@@ -451,7 +451,6 @@ void vvLandmarks::SetTime(int time)
     mPolyData->GetPointData()->SetScalars(mIds[time]);
     mPolyData->GetPointData()->AddArray(mLabels[time]);
     mPolyData->Modified();
-    mPolyData->Update();
     mTime = time;
   }
 }
