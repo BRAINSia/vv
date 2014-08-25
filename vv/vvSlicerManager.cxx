@@ -38,7 +38,8 @@
 #include <vtkPointData.h>
 #include <vtksys/SystemTools.hxx>
 #include <vtkCamera.h>
-
+#include <vtkInformation.h>
+#include <vtkStreamingDemandDrivenPipeline.h>
 #include <qfileinfo.h>
 #include <QMessageBox>
 //----------------------------------------------------------------------------
@@ -692,12 +693,15 @@ void vvSlicerManager::UpdateViews(int current,int slicer)
   double z = (pt[2] - mSlicers[slicer]->GetInput()->GetOrigin()[2])
     /mSlicers[slicer]->GetInput()->GetSpacing()[2];
 
-  if (x >= mSlicers[slicer]->GetInput()->GetWholeExtent()[0]-0.5 &&
-      x <= mSlicers[slicer]->GetInput()->GetWholeExtent()[1]+0.5 &&
-      y >= mSlicers[slicer]->GetInput()->GetWholeExtent()[2]-0.5 &&
-      y <= mSlicers[slicer]->GetInput()->GetWholeExtent()[3]+0.5 &&
-      z >= mSlicers[slicer]->GetInput()->GetWholeExtent()[4]-0.5 &&
-      z <= mSlicers[slicer]->GetInput()->GetWholeExtent()[5]+0.5) {
+  int ext[6];
+  mSlicers[slicer]->GetInput()->GetInformation()->
+    Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), ext);
+  if (x >= ext[0]-0.5 &&
+      x <= ext[1]+0.5 &&
+      y >= ext[2]-0.5 &&
+      y <= ext[3]+0.5 &&
+      z >= ext[4]-0.5 &&
+      z <= ext[5]+0.5) {
     mSlicers[slicer]->UpdateCursorPosition();
     mSlicers[slicer]->SetCursorColor(10,212,255);
     mSelectedSlicer = slicer;
@@ -774,12 +778,15 @@ void vvSlicerManager::UpdateLinked(int slicer)
   double y = (pt[1] - mSlicers[slicer]->GetInput()->GetOrigin()[1]) / mSlicers[slicer]->GetInput()->GetSpacing()[1];
   double z = (pt[2] - mSlicers[slicer]->GetInput()->GetOrigin()[2]) / mSlicers[slicer]->GetInput()->GetSpacing()[2];
 
-  if (x >= mSlicers[slicer]->GetInput()->GetWholeExtent()[0]-0.5 &&
-      x <= mSlicers[slicer]->GetInput()->GetWholeExtent()[1]+0.5 &&
-      y >= mSlicers[slicer]->GetInput()->GetWholeExtent()[2]-0.5 &&
-      y <= mSlicers[slicer]->GetInput()->GetWholeExtent()[3]+0.5 &&
-      z >= mSlicers[slicer]->GetInput()->GetWholeExtent()[4]-0.5 &&
-      z <= mSlicers[slicer]->GetInput()->GetWholeExtent()[5]+0.5) {
+  int ext[6];
+  mSlicers[slicer]->GetInput()->GetInformation()->
+    Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), ext);
+  if (x >= ext[0]-0.5 &&
+      x <= ext[1]+0.5 &&
+      y >= ext[2]-0.5 &&
+      y <= ext[3]+0.5 &&
+      z >= ext[4]-0.5 &&
+      z <= ext[5]+0.5) {
     for (std::list<std::string>::const_iterator i = mLinkedId.begin(); i != mLinkedId.end(); i++) {
 		if (this->IsInvolvedInFusionSequence()) {
 			//this SlicerManager is involved in fusionSequence => do not synchronize the times
@@ -1081,12 +1088,15 @@ void vvSlicerManager::UpdateInfoOnCursorPosition(int slicer)
   int displayOver = 0;
   int displayFus = 0;
   double valueOver=0, valueFus=0;
-  if (X >= mSlicers[slicer]->GetInput()->GetWholeExtent()[0] &&
-      X <= mSlicers[slicer]->GetInput()->GetWholeExtent()[1] &&
-      Y >= mSlicers[slicer]->GetInput()->GetWholeExtent()[2] &&
-      Y <= mSlicers[slicer]->GetInput()->GetWholeExtent()[3] &&
-      Z >= mSlicers[slicer]->GetInput()->GetWholeExtent()[4] &&
-      Z <= mSlicers[slicer]->GetInput()->GetWholeExtent()[5]) {
+  int ext[6];
+  mSlicers[slicer]->GetInput()->GetInformation()->
+    Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), ext);
+  if (X >= ext[0] &&
+      X <= ext[1] &&
+      Y >= ext[2] &&
+      Y <= ext[3] &&
+      Z >= ext[4] &&
+      Z <= ext[5]) {
 
     value = this->GetScalarComponentAsDouble(mSlicers[slicer]->GetInput(), X, Y, Z);
 
@@ -1238,8 +1248,10 @@ void vvSlicerManager::SetSlicingPreset(SlicingPresetType preset)
       return;
     }
     s->ForceUpdateDisplayExtent();
-    s->SetSlice((s->GetInput()->GetWholeExtent()[s->GetSliceOrientation()*2+1]
-                +s->GetInput()->GetWholeExtent()[s->GetSliceOrientation()*2])/2.0);
+    int ext[6];
+    s->GetInput()->GetInformation()->
+      Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), ext);
+    s->SetSlice((ext[s->GetSliceOrientation()*2+1]+ext[s->GetSliceOrientation()*2])/2.0);
     s->ResetCamera();
     s->Render();
   }
@@ -1524,12 +1536,15 @@ void vvSlicerManager::AddLandmark(float x,float y,float z,float t)
   double x_index = (x - mSlicers[0]->GetInput()->GetOrigin()[0])/mSlicers[0]->GetInput()->GetSpacing()[0];
   double y_index = (y - mSlicers[0]->GetInput()->GetOrigin()[1])/mSlicers[0]->GetInput()->GetSpacing()[1];
   double z_index = (z - mSlicers[0]->GetInput()->GetOrigin()[2])/mSlicers[0]->GetInput()->GetSpacing()[2];
-  if (x_index >= mSlicers[0]->GetInput()->GetWholeExtent()[0]-0.5 &&
-      x_index <= mSlicers[0]->GetInput()->GetWholeExtent()[1]+0.5 &&
-      y_index >= mSlicers[0]->GetInput()->GetWholeExtent()[2]-0.5 &&
-      y_index <= mSlicers[0]->GetInput()->GetWholeExtent()[3]+0.5 &&
-      z_index >= mSlicers[0]->GetInput()->GetWholeExtent()[4]-0.5 &&
-      z_index <= mSlicers[0]->GetInput()->GetWholeExtent()[5]+0.5) {
+  int ext[6];
+  mSlicers[0]->GetInput()->GetInformation()->
+    Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), ext);
+  if (x_index >= ext[0]-0.5 &&
+      x_index <= ext[1]+0.5 &&
+      y_index >= ext[2]-0.5 &&
+      y_index <= ext[3]+0.5 &&
+      z_index >= ext[4]-0.5 &&
+      z_index <= ext[5]+0.5) {
     double value = this->GetScalarComponentAsDouble(mSlicers[0]->GetInput(), x_index, y_index, z_index);
     this->GetLandmarks()->AddLandmark(x,y,z,t,value);
     emit LandmarkAdded();

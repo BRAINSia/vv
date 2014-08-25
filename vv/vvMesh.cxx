@@ -135,7 +135,9 @@ void vvMesh::ComputeMasks(vtkImageData* sample,bool extrude)
     double *bounds=mesh->GetBounds();
 
     vtkSmartPointer<vtkImageData> binary_image=vtkSmartPointer<vtkImageData>::New();
-    binary_image->SetScalarTypeToUnsignedChar();
+    //binary_image->SetScalarTypeToUnsignedChar();
+    vtkDataObject::SetPointDataActiveScalarInfo(binary_image->GetInformation(),
+                                                VTK_UNSIGNED_CHAR,1);
     ///Use the smallest mask in which the mesh fits
     // Add two voxels on each side to make sure the mesh fits
     double * samp_origin=sample->GetOrigin();
@@ -150,7 +152,7 @@ void vvMesh::ComputeMasks(vtkImageData* sample,bool extrude)
     binary_image->SetExtent(0,ceil((bounds[1]-origin[0])/spacing[0]+4),
                             0,ceil((bounds[3]-origin[1])/spacing[1]+4),
                             0,ceil((bounds[5]-origin[2])/spacing[2])+4);
-    binary_image->AllocateScalars();
+    binary_image->AllocateScalars(VTK_UNSIGNED_CHAR,1);
     memset(binary_image->GetScalarPointer(),0,binary_image->GetDimensions()[0]*binary_image->GetDimensions()[1]*binary_image->GetDimensions()[2]*sizeof(unsigned char));
 
 
@@ -160,18 +162,22 @@ void vvMesh::ComputeMasks(vtkImageData* sample,bool extrude)
     sts->SetTolerance(0);
     sts->SetInformationInput(binary_image);
 
-    if (extrude) {
+    if (extrude)
+      {
       vtkSmartPointer<vtkLinearExtrusionFilter> extrude=vtkSmartPointer<vtkLinearExtrusionFilter>::New();
-      extrude->SetInput(mesh);
+      extrude->SetInputData(mesh);
       ///We extrude in the -slice_spacing direction to respect the FOCAL convention
       extrude->SetVector(0, 0, -slice_spacing);
-      sts->SetInput(extrude->GetOutput());
-    } else
-      sts->SetInput(mesh);
+      sts->SetInputData(extrude->GetOutput());
+      }
+    else
+      {
+      sts->SetInputData(mesh);
+      }
 
     vtkSmartPointer<vtkImageStencil> stencil=vtkSmartPointer<vtkImageStencil>::New();
-    stencil->SetStencil(sts->GetOutput());
-    stencil->SetInput(binary_image);
+    stencil->SetStencilData(sts->GetOutput());
+    stencil->SetInputData(binary_image);
     stencil->Update();
     this->AddMask(stencil->GetOutput());
 
@@ -189,7 +195,7 @@ void vvMesh::ComputeMeshes()
   this->RemoveMeshes();
   for (std::vector<vtkImageData*>::iterator i=masks.begin(); i!=masks.end(); i++) {
     vtkSmartPointer<vtkMarchingCubes> marching = vtkSmartPointer<vtkMarchingCubes>::New();
-    marching->SetInput(*i);
+    marching->SetInputData(*i);
     marching->SetValue(0,0.5);
     marching->Update();
     this->AddMesh(marching->GetOutput());

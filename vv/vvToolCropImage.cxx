@@ -37,6 +37,8 @@
 #include <vtkImageTranslateExtent.h>
 #include <vtkImageData.h>
 #include <vtkSmartPointer.h>
+#include <vtkInformation.h>
+#include <vtkStreamingDemandDrivenPipeline.h>
 
 //------------------------------------------------------------------------------
 // Create the tool and automagically (I like this word) insert it in
@@ -174,10 +176,12 @@ void vvToolCropImage::InputIsSelected(vvSlicerManager * slicer)
     spin_zmax->setHidden(true);
   }
 
-  int *a = mCurrentImage->GetFirstVTKImageData()->GetWholeExtent();
+  int ext[6];
+  mCurrentImage->GetFirstVTKImageData()->GetInformation()->
+    Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), ext);
   for(int i=0; i<6; i++){
-    mInitialExtent[i] = a[i];
-    mReducedExtent[i] = a[i];
+    mInitialExtent[i] = ext[i];
+    mReducedExtent[i] = ext[i];
   }
   for(int i=0; i<mCurrentSlicerManager->GetNumberOfSlicers(); i++) {
     mCurrentSlicerManager->GetSlicer(i)->EnableReducedExtent(true);

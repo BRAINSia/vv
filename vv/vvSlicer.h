@@ -299,5 +299,6 @@ private:
   bool mFusionVisibility;
   bool mVFVisibility;
   bool mFirstSetSliceOrientation;
+  bool mInSetSlice;
 };
 #endif

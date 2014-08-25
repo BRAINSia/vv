@@ -61,7 +61,7 @@ void vvImageContour::RemoveActors()
             mSlicer->GetRenderer()->RemoveActor(mSquaresActorList[i]);
           }
         }
-      }   
+      }
     }
   }
 }
@@ -70,7 +70,7 @@ void vvImageContour::RemoveActors()
 
 //------------------------------------------------------------------------------
 void vvImageContour::SetSlicer(vvSlicer * slicer) {
-  mSlicer = slicer;  
+  mSlicer = slicer;
   // Create an actor for each time slice
   for (unsigned int numImage = 0; numImage < mSlicer->GetImage()->GetVTKImages().size(); numImage++) {
     CreateNewActor(numImage);
@@ -82,7 +82,7 @@ void vvImageContour::SetSlicer(vvSlicer * slicer) {
 //------------------------------------------------------------------------------
 void vvImageContour::SetImage(vvImage::Pointer image) {
   for (unsigned int numImage = 0; numImage < image->GetVTKImages().size(); numImage++) {
-    mClipperList[numImage]->SetInput(image->GetVTKImages()[numImage]);
+    mClipperList[numImage]->SetInputData(image->GetVTKImages()[numImage]);
   }
   mHiddenImageIsUsed = true;
   mHiddenImage = image;
@@ -152,8 +152,8 @@ void vvImageContour::ShowActors() {
 
 
 //------------------------------------------------------------------------------
-void vvImageContour::SetDepth(double d) 
-{ 
+void vvImageContour::SetDepth(double d)
+{
   mDepth = d;
   // Move the actor to be visible
   double position[3] = {0, 0, 0};
@@ -218,7 +218,7 @@ void vvImageContour::UpdateWithPreserveMemoryMode() {
   if (mPreviousTslice != mTSlice) {
     if (mPreviousTslice != -1) mSquaresActorList[mPreviousTslice]->VisibilityOff();
   }
-  
+
   mSlicer->Render();
 }
 //------------------------------------------------------------------------------
@@ -296,12 +296,12 @@ void vvImageContour::CreateNewActor(int numImage) {
   vtkSmartPointer<vtkPolyDataMapper> squaresMapper = vtkSmartPointer<vtkPolyDataMapper>::New();
 
   if (mHiddenImageIsUsed)
-    clipper->SetInput(mHiddenImage->GetVTKImages()[0]);
+    clipper->SetInputData(mHiddenImage->GetVTKImages()[0]);
   else
-    clipper->SetInput(mSlicer->GetImage()->GetVTKImages()[numImage]);
-  
-  squares->SetInput(clipper->GetOutput());
-  squaresMapper->SetInput(squares->GetOutput());
+    clipper->SetInputData(mSlicer->GetImage()->GetVTKImages()[numImage]);
+
+  squares->SetInputData(clipper->GetOutput());
+  squaresMapper->SetInputData(squares->GetOutput());
   squaresMapper->ScalarVisibilityOff();
   squaresActor->SetMapper(squaresMapper);
   squaresActor->GetProperty()->SetColor(1.0,0,0);
@@ -318,10 +318,10 @@ void vvImageContour::CreateNewActor(int numImage) {
 
 
 //------------------------------------------------------------------------------
-void vvImageContour::UpdateActor(vtkActor * actor, 
-                                 vtkPolyDataMapper * mapper, 
-                                 vtkMarchingSquares * squares, 
-                                 vtkImageClip * clipper, 
+void vvImageContour::UpdateActor(vtkActor * actor,
+                                 vtkPolyDataMapper * mapper,
+                                 vtkMarchingSquares * squares,
+                                 vtkImageClip * clipper,
                                  double threshold, int orientation, int slice) {
   // Set parameter for the MarchigSquare
   squares->SetValue(0, threshold);
@@ -362,7 +362,7 @@ void vvImageContour::UpdateActor(vtkActor * actor,
     extent2 = extent;
     actor->VisibilityOn();
   }
- 
+
   clipper->SetOutputWholeExtent(extent2[0],extent2[1],extent2[2],
                                 extent2[3],extent2[4],extent2[5]);
 
@@ -374,7 +374,7 @@ void vvImageContour::UpdateActor(vtkActor * actor,
   // DD(mDepth);
   // position[orientation] = -mDepth;
   // actor->SetPosition(position);
-  
+
   mapper->Update();
 }
 //------------------------------------------------------------------------------

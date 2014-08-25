@@ -111,7 +111,7 @@ void vvSurfaceViewerDialog::LoadSurface()
     mReaders.push_back(reader);
   }
 
-  mMapper->SetInput(mReaders[mCurrentTime]->GetOutput());
+  mMapper->SetInputData(mReaders[mCurrentTime]->GetOutput());
 
   if (!mActor) {
     mActor = vtkActor::New();
@@ -140,7 +140,7 @@ void vvSurfaceViewerDialog::NextTime()
   mCurrentTime++;
   if (mCurrentTime >= mReaders.size())
     mCurrentTime = 0;
-  mMapper->SetInput(mReaders[mCurrentTime]->GetOutput());
+  mMapper->SetInputData(mReaders[mCurrentTime]->GetOutput());
   mMapper->Modified();
   renderWidget->GetRenderWindow()->Render();
 }
@@ -150,7 +150,7 @@ void vvSurfaceViewerDialog::PreviousTime()
   mCurrentTime--;
   if (mCurrentTime < 0)
     mCurrentTime = (unsigned int) mReaders.size() - 1;
-  mMapper->SetInput(mReaders[mCurrentTime]->GetOutput());
+  mMapper->SetInputData(mReaders[mCurrentTime]->GetOutput());
   mMapper->Modified();
   renderWidget->GetRenderWindow()->Render();
 }

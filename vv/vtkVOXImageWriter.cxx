@@ -55,8 +55,6 @@ void vtkVOXImageWriter::Write( )
 {
   this->SetErrorCode(vtkErrorCode::NoError);
 
-  this->GetInput()->UpdateInformation();
-
   // Error checking
   if (this->GetInput() == NULL ) {
     vtkErrorMacro(<<"Write:Please specify an input!");
@@ -68,8 +66,11 @@ void vtkVOXImageWriter::Write( )
     return;
   }
 
+  this->UpdateInformation();
+
   int nDims = 3;
-  int * ext = this->GetInput()->GetWholeExtent();
+  int ext[6];
+  this->GetInput()->GetInformation()->Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), ext);
   if ( ext[4] == ext[5] ) {
     nDims = 2;
     if ( ext[2] == ext[3] ) {
@@ -133,10 +134,9 @@ void vtkVOXImageWriter::Write( )
   origin[1] += ext[2] * spacing[1];
   origin[2] += ext[4] * spacing[2];
 
-  this->GetInput()->SetUpdateExtent(ext[0], ext[1],
-                                    ext[2], ext[3],
-                                    ext[4], ext[5]);
-  this->GetInput()->UpdateData();
+  this->GetInput()->GetInformation()->Set(vtkStreamingDemandDrivenPipeline::UPDATE_EXTENT(),
+                               ext, 6);
+  this->Update();
 
 
   this->SetFileDimensionality(nDims);

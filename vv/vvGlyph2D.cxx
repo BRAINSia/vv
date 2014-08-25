@@ -32,7 +32,6 @@
 #include "vtkTransform.h"
 #include "vtkUnsignedCharArray.h"
 
-vtkCxxRevisionMacro(vvGlyph2D, "DummyRevision");
 vtkStandardNewMacro(vvGlyph2D);
 
 vvGlyph2D::vvGlyph2D()
@@ -172,8 +171,12 @@ int vvGlyph2D::RequestData(
     defaultPointIds[1] = 1;
     defaultSource->SetPoints(defaultPoints);
     defaultSource->InsertNextCell(VTK_LINE, 2, defaultPointIds);
-    defaultSource->SetUpdateExtent(0, 1, 0);
-    this->SetSource(defaultSource);
+    int ext[6];
+    ext[0] = ext[1] = 0;
+    ext[2] = 0; ext[3] = 1;
+    ext[4] = 0; ext[5] = 0;
+    vtkStreamingDemandDrivenPipeline::SetUpdateExtent(defaultSource->GetInformation(),ext);
+    this->SetSourceData(defaultSource);
     defaultSource->Delete();
     defaultSource = NULL;
     defaultPoints->Delete();

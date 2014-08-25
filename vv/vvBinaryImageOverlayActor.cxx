@@ -28,6 +28,8 @@
 #include <vtkProperty.h>
 #include <vtkImageMapToRGBA.h>
 #include <vtkLookupTable.h>
+#include <vtkInformation.h>
+#include <vtkStreamingDemandDrivenPipeline.h>
 
 //------------------------------------------------------------------------------
 vvBinaryImageOverlayActor::vvBinaryImageOverlayActor()
@@ -107,7 +109,7 @@ void vvBinaryImageOverlayActor::Initialize(bool IsVisible)
   for (unsigned int numImage = 0; numImage < mSlicer->GetImage()->GetVTKImages().size(); numImage++) {
     // how many intensity ?
     vtkSmartPointer<vtkImageMapToRGBA> mOverlayMapper = vtkSmartPointer<vtkImageMapToRGBA>::New();
-    mOverlayMapper->SetInput(mImage->GetVTKImages()[0]); // DS TODO : to change if it is 4D !!!
+    mOverlayMapper->SetInputData(mImage->GetVTKImages()[0]); // DS TODO : to change if it is 4D !!!
 
     double range[2];
     mImage->GetVTKImages()[0]->GetScalarRange(range);
@@ -133,7 +135,7 @@ void vvBinaryImageOverlayActor::Initialize(bool IsVisible)
     mOverlayMapper->SetLookupTable(mColorLUT);
 
     vtkSmartPointer<vtkImageActor> mOverlayActor = vtkSmartPointer<vtkImageActor>::New();
-    mOverlayActor->SetInput(mOverlayMapper->GetOutput());
+    mOverlayActor->SetInputData(mOverlayMapper->GetOutput());
     mOverlayActor->SetPickable(0);
     mOverlayActor->SetVisibility(IsVisible);
     //mOverlayActor->SetOpacity(1.0);	
@@ -248,7 +250,7 @@ void vvBinaryImageOverlayActor::UpdateColor()
     mOverlayMapper->SetLookupTable(mColorLUT);
 
     vtkImageActor * mOverlayActor = mImageActorList[numImage];
-    mOverlayActor->SetInput(mOverlayMapper->GetOutput());
+    mOverlayActor->SetInputData(mOverlayMapper->GetOutput());
   }
 }
 //------------------------------------------------------------------------------
@@ -276,7 +278,10 @@ void vvBinaryImageOverlayActor::UpdateSlice(int slicer, int slice, bool force)
   int maskExtent[6];
   ComputeExtent(orientation, mSlice, imageExtent, maskExtent);
   ComputeExtent(maskExtent, maskExtent, mSlicer->GetImage()->GetFirstVTKImageData(), mImage->GetFirstVTKImageData());
-  mSlicer->ClipDisplayedExtent(maskExtent, mMapperList[mTSlice]->GetInput()->GetWholeExtent());
+  int ext[6];
+  mMapperList[mTSlice]->GetInput()->GetInformation()->
+    Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), ext);
+  mSlicer->ClipDisplayedExtent(maskExtent, ext);
   SetDisplayExtentAndCameraPosition(orientation, mSlice, maskExtent, mImageActorList[mTSlice], mDepth);
 
   // set previous slice

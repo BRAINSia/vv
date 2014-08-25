@@ -26,7 +26,9 @@ else()
     -DVTK_USE_PARALLEL:BOOL=ON
     )
 endif()
-
+list(APPEND VTK_QT_ARGS
+  -DModule_vtkGUISupportQt:BOOL=ON
+  -DModule_vtkGUISupportQtOpenGL:BOOL=ON)
 set(proj VTK)
 
 set(VTK_DIR ${CMAKE_CURRENT_BINARY_DIR}/${proj}-build)

@@ -206,7 +206,7 @@ endforeach(tool)
 #=========================================================
 #Add Foundation Libraries (this should be after our libraries, since we depend
 #on them)
-set(foundationLibraries clitkCommon ${ITK_LIBRARIES} QVTK vtkHybrid)
+set(foundationLibraries clitkCommon ${ITK_LIBRARIES} ${VTK_LIBRARIES})
 
 #=========================================================
 # Use CxImage to create animated gifs

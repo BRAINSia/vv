@@ -297,7 +297,7 @@ std::vector<vvMesh::Pointer> vvMeshReader::readSelectedContours()
                       ids[1] = (ids[0] + 1) % tpoint_number.GetValue(); //0-1,1-2,...,n-1-0
                       contour->GetLines()->InsertNextCell(2, ids);
                     }
-                  append->AddInput(contour);
+                  append->AddInputData(contour);
                 }
               else
                 if (contour_type == "POINT ")

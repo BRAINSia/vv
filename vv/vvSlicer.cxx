@@ -158,6 +158,7 @@ vvSlicer::vvSlicer()
   mConcatenatedFusionTransform = vtkSmartPointer<vtkTransform>::New();
   mConcatenatedOverlayTransform = vtkSmartPointer<vtkTransform>::New();
   mFirstSetSliceOrientation = true;
+  mInSetSlice = false;
 }
 //------------------------------------------------------------------------------
 
@@ -961,7 +962,11 @@ void vvSlicer::UpdateDisplayExtent()
   if (!input || !this->ImageActor) {
     return;
   }
-  this->SetSlice( this->GetSlice() ); //SR: make sure the update let the slice in extents
+  if(!this->mInSetSlice)
+    {
+    this->SetSlice( this->GetSlice() ); //SR: make sure the update let
+                                        //the slice in extents
+    }
 
   // Local copy of extent
   int w_ext[6];
@@ -1617,7 +1622,9 @@ void vvSlicer::SetSlice(int slice)
   this->Slice = slice;
   SetContourSlice();
   this->Modified();
+  this->mInSetSlice = true;
   this->UpdateDisplayExtent();
+  this->mInSetSlice = false;
 
   // Seems to work without this line
   //this->Render();

@@ -37,7 +37,8 @@
 #include "vtkImageContinuousErode3D.h"
 #include "vtkImageContinuousDilate3D.h"
 #include "vtkRenderWindow.h"
-
+#include "vtkInformation.h"
+#include "vtkStreamingDemandDrivenPipeline.h"
 //------------------------------------------------------------------------------
 // Create the tool and automagically (I like this word) insert it in
 // the main window menu.
@@ -399,10 +400,10 @@ void vvToolSegmentation::Erode()
   vtkImageContinuousErode3D* erode = vtkImageContinuousErode3D::New();
   erode->SetKernelSize(mKernelValue,mKernelValue,mKernelValue);
   vtkImageData* image = mCurrentMaskImage->GetVTKImages()[0];
-  erode->SetInput(image);
+  erode->SetInputData(image);
   erode->Update();
   image->DeepCopy(erode->GetOutput());
-  image->Update();
+  image->Modified();
   UpdateAndRenderNewMask();
   erode->Delete();
   QApplication::restoreOverrideCursor();
@@ -420,10 +421,10 @@ void vvToolSegmentation::Dilate()
   vtkImageContinuousDilate3D* dilate = vtkImageContinuousDilate3D::New();
   dilate->SetKernelSize(mKernelValue,mKernelValue,mKernelValue);
   vtkImageData* image = mCurrentMaskImage->GetVTKImages()[0];
-  dilate->SetInput(image);
+  dilate->SetInputData(image);
   dilate->Update();
   image->DeepCopy(dilate->GetOutput());
-  image->Update();
+  image->Modified();
   UpdateAndRenderNewMask();
   dilate->Delete();
   QApplication::restoreOverrideCursor();
@@ -557,13 +558,15 @@ void vvToolSegmentation::MousePositionChanged(int slicer)
   // mCurrentMousePositionInPixel[1] = Yover;
   // mCurrentMousePositionInPixel[2] = Zover;
   // DDV(mCurrentMousePositionInPixel, 3);
-
-  if (Xover >= image->GetWholeExtent()[0] &&
-      Xover <= image->GetWholeExtent()[1] &&
-      Yover >= image->GetWholeExtent()[2] &&
-      Yover <= image->GetWholeExtent()[3] &&
-      Zover >= image->GetWholeExtent()[4] &&
-      Zover <= image->GetWholeExtent()[5]) {
+  int ext[6];
+  image->GetInformation()->
+    Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT(), ext);
+  if (Xover >= ext[0] &&
+      Xover <= ext[1] &&
+      Yover >= ext[2] &&
+      Yover <= ext[3] &&
+      Zover >= ext[4] &&
+      Zover <= ext[5]) {
     if (mCurrentState == State_Default) { // inside the mask
       mCurrentLabelUnderMousePointer = 1;
       return; 

@@ -3265,7 +3265,7 @@ void vvMainWindow::SaveScreenshotAllSlices()
     fn = itksys::SystemTools::GetFilenamePath(filename.toStdString()) + "/"+ fn
       + "_" + num + itksys::SystemTools::GetFilenameLastExtension(filename.toStdString());
     writer->SetFileName(fn.c_str());
-    writer->SetInput(windowToImageFilter->GetOutput());
+    writer->SetInputData(windowToImageFilter->GetOutput());
     writer->Write();
   }
 }
@@ -3319,7 +3319,7 @@ void vvMainWindow::SaveScreenshot(QVTKWidget *widget)
 
     // Snapshot image if not null
     if(imgwriter!=NULL) {
-      imgwriter->SetInput(image);
+      imgwriter->SetInputData(image);
       imgwriter->SetFileName(fileName.toStdString().c_str());
       imgwriter->Write();
       return;
@@ -3389,7 +3389,7 @@ void vvMainWindow::SaveScreenshot(QVTKWidget *widget)
 
     // Take video if not null
     if(vidwriter!=NULL){
-      vidwriter->SetInput(image);
+      vidwriter->SetInputData(image);
       vidwriter->SetFileName(fileName.toStdString().c_str());
       vidwriter->Start();
       int nSlice = mSlicerManagers[smIndex]->GetSlicer(0)->GetTMax();
@@ -3398,7 +3398,7 @@ void vvMainWindow::SaveScreenshot(QVTKWidget *widget)
         vtkSmartPointer<vtkWindowToImageFilter> w2i = vtkSmartPointer<vtkWindowToImageFilter>::New();
         w2i->SetInput(widget->GetRenderWindow());
         w2i->Update();
-        vidwriter->SetInput(w2i->GetOutput());
+        vidwriter->SetInputData(w2i->GetOutput());
         vidwriter->Write();
       }
       vidwriter->End();

@@ -46,14 +46,14 @@ void vvMeshActor::Init(vvMesh::Pointer mesh,int time_slice,vvImage::Pointer vf)
   mMarching=vtkMarchingSquares::New();
   mTimeSlice=time_slice;
   if (static_cast<unsigned int>(time_slice)<mMesh->GetNumberOfMeshes())
-    mMarching->SetInput(mMesh->GetMask(time_slice));
+    mMarching->SetInputData(mMesh->GetMask(time_slice));
   else
-    mMarching->SetInput(mMesh->GetMask(0));
+    mMarching->SetInputData(mMesh->GetMask(0));
   mMarching->SetValue(0,0.5);
   //mMarching->Update();
 
   mMapper=vtkPolyDataMapper::New();
-  mMapper->SetInput(mMarching->GetOutput());
+  mMapper->SetInputData(mMarching->GetOutput());
   //The following line allows to display the contour over the image
   //(http://www.nabble.com/What-happens-when-two-actors-are-at-the-same-depth--td23175458.html)
   vtkMapper::SetResolveCoincidentTopologyToPolygonOffset();
@@ -97,9 +97,9 @@ void vvMeshActor::SetTimeSlice(int time)
 {
   mTimeSlice=time;
   if (static_cast<unsigned int>(time)<mMesh->GetNumberOfMasks())
-    mMarching->SetInput(mMesh->GetMask(time));
+    mMarching->SetInputData(mMesh->GetMask(time));
   else
-    mMarching->SetInput(mMesh->GetMask(0));
+    mMarching->SetInputData(mMesh->GetMask(0));
   SetCutSlice(mCutSlice); //We need to find the new mask cut slice,
   //since masks do not all have the same origin
 }

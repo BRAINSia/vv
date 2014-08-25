@@ -1,5 +1,5 @@
 #=========================================================
-# CLITK = Command Line ITK
+# VV = Command Line ITK
 cmake_minimum_required(VERSION 2.8)
 cmake_policy(VERSION 2.8)
 if(COMMAND cmake_policy)
@@ -15,7 +15,7 @@ INCLUDE(cmake/common.cmake)
 #Support for the CTest dashboard testing system
 OPTION(BUILD_TESTING "Build the testing tree" OFF)
 IF (BUILD_TESTING)
-  OPTION(CLITK_BUILD_TESTING "Test ITK" ON)
+  OPTION(VV_BUILD_TESTING "Test ITK" ON)
   INCLUDE(CTest)
 ENDIF(BUILD_TESTING)
 #=========================================================
@@ -51,9 +51,9 @@ FIND_PACKAGE(Gengetopt)
 FIND_LIBRARY(LIBSTATGRAB NAMES statgrab PATHS)
 IF (${LIBSTATGRAB} MATCHES "LIBSTATGRAB-NOTFOUND")
 #  MESSAGE("Install libstatgrab (http://www.i-scream.org/libstatgrab/) for memory usage information")
-  SET(CLITK_MEMORY_INFO OFF)
+  SET(VV_MEMORY_INFO OFF)
 ELSE (${LIBSTATGRAB} MATCHES "LIBSTATGRAB-NOTFOUND")
-  SET(CLITK_MEMORY_INFO ON)
+  SET(VV_MEMORY_INFO ON)
 ENDIF (${LIBSTATGRAB} MATCHES "LIBSTATGRAB-NOTFOUND")  
 #=========================================================
 
@@ -70,7 +70,7 @@ ENDIF(BUILD_DOXYGEN)
 # Building in the source tree is forbidden
 IF(PROJECT_BINARY_DIR STREQUAL ${PROJECT_SOURCE_DIR})
   MESSAGE(FATAL_ERROR "Building in the source tree is not allowed ! Quit; remove the file 'CMakeCache.txt' and the folder 'CMakeFiles' an
-d build outside the sources (for example 'mkdir build ; cmake <CLITK_DIR>'.")
+d build outside the sources (for example 'mkdir build ; cmake <VV_DIR>'.")
 ENDIF(PROJECT_BINARY_DIR STREQUAL ${PROJECT_SOURCE_DIR})
 #=========================================================
 
@@ -93,15 +93,15 @@ ADD_SUBDIRECTORY(registration)
 ADD_SUBDIRECTORY(cluster_tools)
 
 # Compilation options
-OPTION(CLITK_EXPERIMENTAL "Enable experimental software and features" OFF)
-OPTION(CLITK_BUILD_TOOLS "Build command-line tools" OFF)
-OPTION(CLITK_BUILD_SEGMENTATION "Build command-line segmentation tools" OFF)
-OPTION(CLITK_BUILD_REGISTRATION "Build command-line registration tools" OFF)
+OPTION(VV_EXPERIMENTAL "Enable experimental software and features" OFF)
+OPTION(VV_BUILD_TOOLS "Build command-line tools" OFF)
+OPTION(VV_BUILD_SEGMENTATION "Build command-line segmentation tools" OFF)
+OPTION(VV_BUILD_REGISTRATION "Build command-line registration tools" OFF)
 
-OPTION(CLITK_BUILD_VV "Build vv the 4D visualizer (requires VTK and QT)" ON)
-IF (CLITK_BUILD_VV)
+OPTION(VV_BUILD_VV "Build vv the 4D visualizer (requires VTK and QT)" ON)
+IF (VV_BUILD_VV)
   ADD_SUBDIRECTORY(vv)
-ENDIF(CLITK_BUILD_VV)
+ENDIF(VV_BUILD_VV)
 
 
 #=========================================================

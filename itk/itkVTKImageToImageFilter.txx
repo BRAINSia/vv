@@ -77,7 +77,7 @@ void
 VTKImageToImageFilter<TOutputImage>
 ::SetInput( vtkImageData * inputImage )
 {
-  m_Exporter->SetInput( inputImage );
+  m_Exporter->SetInputData( inputImage );
 }
 
 
