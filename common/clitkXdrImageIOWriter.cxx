@@ -819,7 +819,7 @@ static size_t nki_private_compress(signed char  *dest, short int  *src, size_t n
 
 void clitk::XdrImageIO::WriteImage(const char* file, char* headerinfo, char* headerfile, int raw,
                                    int offset, char bLittleEndian, int iNkiCompression,
-                                   int wcoords, int append, int getsize, char *tobuffer, const void* data)
+                                   int /* wcoords */, int append, int getsize, char *tobuffer, const void* data)
 {
   AVSINT   total=1;
   unsigned int      i;
@@ -957,7 +957,7 @@ void clitk::XdrImageIO::WriteImage(const char* file, char* headerinfo, char* hea
 
   for (i=0; i<GetNumberOfDimensions(); i++) {
     if (!raw) {
-      sprintf(temp, "dim%d=%lu\n", i+1, GetDimensions(i));
+    sprintf(temp, "dim%d=%lu\n", i+1, static_cast<unsigned long>(GetDimensions(i)));
       slen = strlen(temp);
       if (!checked_write(f, temp, slen, buffer)) {
         free(pCompressed);

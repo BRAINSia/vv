@@ -71,7 +71,7 @@ std::string clitk::GetExtension(const std::string& filename)
 
 //------------------------------------------------------------------
 // Display progression
-void clitk::VerboseInProgress(const int nb, const int current, const int percentage)
+void clitk::VerboseInProgress(const int nb, const int current, const int /* percentage */ )
 {
   static int previous = -1;
   const int rounded = (100*current)/nb;

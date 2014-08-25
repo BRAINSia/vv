@@ -66,7 +66,7 @@ public:
     virtual bool CanReadFile( const char* FileNameToRead );
 
     /*-------- This part of the interfaces deals with writing data. ----- */
-    virtual void WriteImageInformation(bool keepOfStream) {;}
+    virtual void WriteImageInformation(bool /* keepOfStream */) {;}
     virtual void WriteImageInformation() { WriteImageInformation(false); }
     virtual bool CanWriteFile(const char* FileNameToWrite);
     virtual void Write(const void* buffer);

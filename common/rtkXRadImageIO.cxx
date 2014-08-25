@@ -143,19 +143,19 @@ void rtk::XRadImageIO::Read(void * buffer)
 
 //--------------------------------------------------------------------
 // Write Image Information
-void rtk::XRadImageIO::WriteImageInformation(bool keepOfStream)
+void rtk::XRadImageIO::WriteImageInformation(bool /* keepOfStream */)
 {
 }
 
 //--------------------------------------------------------------------
 // Write Image Information
-bool rtk::XRadImageIO::CanWriteFile(const char* FileNameToWrite)
+bool rtk::XRadImageIO::CanWriteFile(const char* /* FileNameToWrite */)
 {
   return false;
 }
 
 //--------------------------------------------------------------------
 // Write Image
-void rtk::XRadImageIO::Write(const void * buffer)
+void rtk::XRadImageIO::Write(const void * /* buffer */)
 {
 } ////
