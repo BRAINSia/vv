@@ -1542,7 +1542,7 @@ void vvMainWindow::DisplaySliders(int slicer, int window)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-void vvMainWindow::CloseImage(QTreeWidgetItem* item, int column)
+void vvMainWindow::CloseImage(QTreeWidgetItem* item, int /* column */)
 {
   int index = GetSlicerIndexFromItem(item);
 
@@ -1616,14 +1616,14 @@ void vvMainWindow::CloseImage(QTreeWidgetItem* item, int column)
         //ideally, I should duplicate the code, and avoid calling CloseImage, since this pops up another interactive box
         QTreeWidgetItem* overlayItem;
         if (mSlicerManagers[index]->IsMainSequenceOfFusionSequence()) {
-          for (unsigned i=0 ; i<item->childCount() ; i++) {
+          for (int i=0 ; i<item->childCount() ; i++) {
             overlayItem = item->child(i);
             this->CloseImage( overlayItem, 0 );
           }
         }
         else {
           QTreeWidgetItem* linkedItem = this->GetItemFromSlicerManager( mSlicerManagers[mSlicerManagers[index]->GetFusionSequenceIndexOfLinkedManager()] );
-          for (unsigned i=0 ; i<linkedItem->childCount() ; i++) {
+          for (int  i=0 ; i<linkedItem->childCount() ; i++) {
             overlayItem = linkedItem->child(i);
             this->CloseImage( overlayItem, 0 );
           }
@@ -1660,7 +1660,7 @@ void vvMainWindow::CloseImage(QTreeWidgetItem* item, int column)
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-void vvMainWindow::ReloadImage(QTreeWidgetItem* item, int column)
+void vvMainWindow::ReloadImage(QTreeWidgetItem* item, int /* column */)
 {
   // int index = GetSlicerIndexFromItem(item);
   //   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -1919,7 +1919,7 @@ void vvMainWindow::UpdateLinkManager(std::string id, int slicer, double x, doubl
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-void vvMainWindow::UpdateLinkedNavigation(std::string id, vvSlicerManager * sm, vvSlicer* refSlicer)
+void vvMainWindow::UpdateLinkedNavigation(std::string id, vvSlicerManager * /* sm */, vvSlicer* refSlicer)
 {
   for (unsigned int i = 0; i < mSlicerManagers.size(); i++) {
     if (id == mSlicerManagers[i]->GetId()) {
@@ -1930,7 +1930,7 @@ void vvMainWindow::UpdateLinkedNavigation(std::string id, vvSlicerManager * sm, 
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-void vvMainWindow::ShowContextMenu(QPoint point)
+void vvMainWindow::ShowContextMenu(QPoint /* point */)
 {
   if (!DataTree->selectedItems().size()) {
     contextActions[1]->setEnabled(0);
@@ -2082,7 +2082,7 @@ void vvMainWindow::AddOverlayImage(int index, std::vector<std::string> fileNames
 
 
 //------------------------------------------------------------------------------
-void vvMainWindow::AddROI(int index, QString file)
+void vvMainWindow::AddROI(int /* index */, QString /* file */)
 {
   /*
   // Get slice manager

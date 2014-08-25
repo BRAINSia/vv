@@ -1113,7 +1113,7 @@ void vvSlicer::ConvertImageToImageDisplayExtent(vtkImageData *sourceImage, const
                                                 vtkImageData *targetImage, int targetExtent[6])
 {
   double dExtents[6];
-  for(unsigned int i=0; i<6; i++) {
+  for( int i=0; i<6; i++) {
     // From source voxel coordinates to world coordinates
     dExtents[i] = sourceImage->GetOrigin()[i/2] + sourceImage->GetSpacing()[i/2] * sourceExtent[i];
 
@@ -1121,9 +1121,9 @@ void vvSlicer::ConvertImageToImageDisplayExtent(vtkImageData *sourceImage, const
     dExtents[i] = (dExtents[i]- targetImage->GetOrigin()[i/2]) / targetImage->GetSpacing()[i/2];
     
     // Round to current slice or larger extent
-    if(i/2==this->GetOrientation())
+    if(i/2 == this->GetOrientation())
       targetExtent[i] = itk::Math::Round<double>(dExtents[i]);
-    else if(i%2==1)
+    else if(i % 2 == 1)
       targetExtent[i] = itk::Math::Ceil<double>(dExtents[i]);
     else
       targetExtent[i] = itk::Math::Floor<double>(dExtents[i]);

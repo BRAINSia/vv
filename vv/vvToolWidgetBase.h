@@ -1,7 +1,7 @@
 /*=========================================================================
   Program:   vv                     http://www.creatis.insa-lyon.fr/rio/vv
 
-  Authors belong to: 
+  Authors belong to:
   - University of LYON              http://www.universite-lyon.fr/
   - Léon Bérard cancer center       http://www.centreleonberard.fr
   - CREATIS CNRS laboratory         http://www.creatis.insa-lyon.fr
@@ -30,8 +30,8 @@ class vvMainWindowBase;
 
 //------------------------------------------------------------------------------
 class vvToolWidgetBase:
-  public QWidget, 
-  public Ui::vvToolWidgetBase 
+  public QWidget,
+  public Ui::vvToolWidgetBase
 {
   Q_OBJECT
   public:
@@ -68,13 +68,13 @@ protected:
   vvImage * mCurrentImage;
   bool mIsInitialized;
   QWidget * mWidgetForTab;
-  
+
   // The static members manage all tool instances
-  static QWidget * mStaticWidgetForTab; // <-- MUST BE CHANGED IN VECTOR 
+  static QWidget * mStaticWidgetForTab; // <-- MUST BE CHANGED IN VECTOR
   static int mTabNumber;
-  static QVBoxLayout * mStaticVerticalLayout;  // <-- MUST BE CHANGED IN VECTOR 
+  static QVBoxLayout * mStaticVerticalLayout;  // <-- MUST BE CHANGED IN VECTOR
   static bool mIsAnotherToolWaitInput;
-  virtual void CheckInputList(std::vector<vvSlicerManager*> & l, int & index) { }
+  virtual void CheckInputList(std::vector<vvSlicerManager*> & /* l */, int & /* index */) { }
   virtual void closeEvent(QCloseEvent *event);
   void SwapCurrentWidget();
   bool mPreventToUseTwoToolsOnSameInput;

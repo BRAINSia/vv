@@ -149,7 +149,8 @@ namespace clitk {
 
   //--------------------------------------------------------------------
   template<class T1>
-  std::string CreateListOfTypes(bool last=true) {
+  std::string CreateListOfTypes(bool last=true)
+  {
     return GetTypeAsString<T1>();
   }
   

@@ -39,7 +39,7 @@ vvMeshActor::~vvMeshActor()
   mActor->Delete();
 }
 
-void vvMeshActor::Init(vvMesh::Pointer mesh,int time_slice,vvImage::Pointer vf)
+void vvMeshActor::Init(vvMesh::Pointer mesh,int time_slice,vvImage::Pointer /* xxvf */)
 {
   mMesh=mesh;
 

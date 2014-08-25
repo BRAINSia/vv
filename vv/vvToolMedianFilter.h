@@ -67,6 +67,8 @@
 
       static void Initialize();
       virtual void GetArgsInfoFromGUI();
+
+      using vvToolWidgetBase::InputIsSelected;
       virtual void InputIsSelected(vvSlicerManager * m);
       virtual void apply();
  

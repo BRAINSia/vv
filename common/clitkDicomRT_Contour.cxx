@@ -45,7 +45,7 @@ clitk::DicomRT_Contour::~DicomRT_Contour()
 
 
 //--------------------------------------------------------------------
-void clitk::DicomRT_Contour::Print(std::ostream & os) const
+void clitk::DicomRT_Contour::Print(std::ostream & /* os */) const
 {
   DD("TODO : print Contours");
 }

@@ -221,7 +221,7 @@ void vvSegmentationDialog::SetImage(vvImage::Pointer image)
   QApplication::restoreOverrideCursor();
 }
 
-void vvSegmentationDialog::UpdateSlice(int slicer,int slices)
+void vvSegmentationDialog::UpdateSlice(int /* slicer */,int /* slices */)
 {
   int slice = mManager->GetSlicer(0)->GetSlice();
   int tslice = mManager->GetSlicer(0)->GetTSlice();
@@ -281,7 +281,7 @@ void vvSegmentationDialog::UpdateSlice(int slicer,int slices)
 }
 
 
-void vvSegmentationDialog::clippingvaluechanged(int value)
+void vvSegmentationDialog::clippingvaluechanged(int /* value */)
 {
   binaryButton->setEnabled(1);
   int min = (clipping1Slider->value() < clipping2Slider->value() ) ?

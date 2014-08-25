@@ -249,14 +249,14 @@ void vvToolBinarize::InputIsSelected(vvSlicerManager * m)
 
 
 //------------------------------------------------------------------------------
-void vvToolBinarize::UpdateOrientation(int slicer,int orientation)
+void vvToolBinarize::UpdateOrientation(int slicer,int /* orientation */)
 {
   Update(slicer);
 }
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-void vvToolBinarize::UpdateSlice(int slicer,int slices)
+void vvToolBinarize::UpdateSlice(int slicer,int /* slices */)
 {
   Update(slicer);
 }

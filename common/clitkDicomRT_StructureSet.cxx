@@ -399,11 +399,9 @@ void clitk::DicomRT_StructureSet::Read(const std::string & filename)
 std::map<int, clitk::DicomRT_ROI::Pointer> mROIs;
   std::map<int, std::string> mMapOfROIName;
 #if GDCM_MAJOR_VERSION == 2
-  gdcm::Reader * mReader;
   gdcm::SmartPointer<gdcm::SequenceOfItems> mROIInfoSequenceOfItems;
   gdcm::SmartPointer<gdcm::SequenceOfItems> mROIContoursSequenceOfItems;  
 #endif
-  gdcm::File * mFile;
 
 
   //----------------------------------

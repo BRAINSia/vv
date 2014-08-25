@@ -43,7 +43,7 @@ public:
   }
 
   void Execute(vtkObject *caller,
-               unsigned long event,
+               unsigned long vtkNotUsed(event),
                void *vtkNotUsed(callData)) {
     vtkInteractorStyle *isi = static_cast<vtkInteractorStyle *>(caller);
     if (isi) {
@@ -147,9 +147,14 @@ void vvSurfaceViewerDialog::NextTime()
 
 void vvSurfaceViewerDialog::PreviousTime()
 {
-  mCurrentTime--;
-  if (mCurrentTime < 0)
+  if (mCurrentTime == 0)
+    {
     mCurrentTime = (unsigned int) mReaders.size() - 1;
+    }
+  else
+    {
+    mCurrentTime--;
+    }
   mMapper->SetInputData(mReaders[mCurrentTime]->GetOutput());
   mMapper->Modified();
   renderWidget->GetRenderWindow()->Render();

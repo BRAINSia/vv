@@ -134,7 +134,7 @@ std::vector<vvSlicerManager*> & vvToolInputSelectorWidget::GetSelectedInputs()
 
 
 //------------------------------------------------------------------------------
-void vvToolInputSelectorWidget::AnImageIsBeingClosed(vvSlicerManager * m)
+void vvToolInputSelectorWidget::AnImageIsBeingClosed(vvSlicerManager * /* xxm */)
 {
   //  DD("TODO : verify that the image still exist !!");
   //  for(int i=0; i<

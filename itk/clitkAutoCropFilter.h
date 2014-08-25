@@ -54,6 +54,7 @@ namespace clitk {
     typedef long LabelType;
 
     /** Connect one of the operands for pixel-wise addition */
+    using Superclass::SetInput;
     void SetInput( const ImageType * image);
     
     // LabelImage information (BG)

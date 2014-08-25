@@ -117,11 +117,10 @@ void HelperClass1<InputImageType, OutputImageType>::BeforeThreadedGenerateData()
 //=========================================================================================================================
 //update the output for the outputRegionForThread
 template<class InputImageType, class OutputImageType>
-#if ITK_VERSION_MAJOR >= 4
-void HelperClass1<InputImageType, OutputImageType>::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, itk::ThreadIdType threadId )
-#else
-void HelperClass1<InputImageType, OutputImageType>::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, int threadId )
-#endif
+void
+HelperClass1<InputImageType, OutputImageType>
+::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread,
+                       itk::ThreadIdType /* threadId */ )
 {
 //   std::cout << "HelperClass1::ThreadedGenerateData - IN " << threadId << std::endl;
   //Get pointer to the input
@@ -145,7 +144,7 @@ void HelperClass1<InputImageType, OutputImageType>::ThreadedGenerateData(const O
   typedef typename OutputImageType::PixelType DisplacementType;
   DisplacementType displacement;
   inputIt.GoToBegin();
-  
+
   typename OutputImageType::SizeType size = outputPtr->GetLargestPossibleRegion().GetSize();
 
   //define some temp variables
@@ -199,9 +198,12 @@ void HelperClass1<InputImageType, OutputImageType>::ThreadedGenerateData(const O
             overlap *= 1.0 - distance[dim];
           }
           upper >>= 1;
-          
-          if (neighIndex[dim] >= size[dim])
+
+          if (neighIndex[dim] >=
+              static_cast<typename OutputImageType::IndexType::IndexValueType>(size[dim]))
+            {
             neighIndex[dim] = size[dim] - 1;
+            }
         }
 
 
@@ -326,14 +328,14 @@ template<class InputImageType, class OutputImageType > HelperClass2<InputImageTy
 
 //=========================================================================================================================
 //update the output for the outputRegionForThread
-#if ITK_VERSION_MAJOR >= 4
-template<class InputImageType, class OutputImageType > void HelperClass2<InputImageType, OutputImageType>::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, itk::ThreadIdType threadId )
-#else
-template<class InputImageType, class OutputImageType > void HelperClass2<InputImageType, OutputImageType>::ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread, int threadId )
-#endif
+template<class InputImageType, class OutputImageType >
+void
+HelperClass2<InputImageType, OutputImageType>
+::ThreadedGenerateData(const OutputImageRegionType&
+                       outputRegionForThread, itk::ThreadIdType /* threadId */ )
 {
 //   std::cout << "HelperClass2::ThreadedGenerateData - IN " << threadId << std::endl;
-  
+
   //Get pointer to the input
   typename InputImageType::ConstPointer inputPtr = this->GetInput();
 
@@ -383,9 +385,9 @@ template<class InputImageType, class OutputImageType > void HelperClass2<InputIm
     ++inputIt;
 
   }//end while
-  
+
 //   std::cout << "HelperClass2::ThreadedGenerateData - OUT " << threadId << std::endl;
-  
+
 }//end member
 
 
@@ -487,7 +489,7 @@ template <class InputImageType, class OutputImageType> void InvertVFFilter<Input
 
   //Set the output
   this->SetNthOutput(0, helper2->GetOutput());
-  
+
   //std::cout << "InvertVFFilter::GenerateData - OUT" << std::endl;
 }
 

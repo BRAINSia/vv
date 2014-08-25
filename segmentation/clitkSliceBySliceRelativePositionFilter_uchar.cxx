@@ -1,7 +1,7 @@
 /*=========================================================================
   Program:   vv                     http://www.creatis.insa-lyon.fr/rio/vv
 
-  Authors belong to: 
+  Authors belong to:
   - University of LYON              http://www.universite-lyon.fr/
   - Léon Bérard cancer center       http://oncora1.lyon.fnclcc.fr
   - CREATIS CNRS laboratory         http://www.creatis.insa-lyon.fr
@@ -23,7 +23,7 @@
 #include "clitkSliceBySliceRelativePositionFilter.h"
 
 typedef unsigned char                    PixelType_uchar;
-typedef itk::Image<PixelType_uchar, 3>   ImageType_uchar;    
+typedef itk::Image<PixelType_uchar, 3>   ImageType_uchar;
 template class clitk::SliceBySliceRelativePositionFilter<ImageType_uchar>;
 
 #endif

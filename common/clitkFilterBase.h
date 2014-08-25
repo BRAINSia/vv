@@ -1,7 +1,7 @@
 /*=========================================================================
   Program:   vv                     http://www.creatis.insa-lyon.fr/rio/vv
 
-  Authors belong to: 
+  Authors belong to:
   - University of LYON              http://www.universite-lyon.fr/
   - Léon Bérard cancer center       http://www.centreleonberard.fr
   - CREATIS CNRS laboratory         http://www.creatis.insa-lyon.fr
@@ -28,7 +28,7 @@
 #include "itkObject.h"
 
 namespace clitk {
-  
+
   //--------------------------------------------------------------------
   /*
     Convenient class to manage frequent options
@@ -40,18 +40,20 @@ namespace clitk {
   public:
     // Standard class typedefs
     typedef FilterBase  Self;
-    
+
     // Run-time type information (and related methods)
     itkTypeMacro(FilterBase, Object);
 
     // Needed by itkSetMacro (cannot inherit from itkObject because of
     // multiple inheritance)
-    virtual void Modified() {} 
+    virtual void Modified() const {}
     virtual bool GetDebug() const { return false; }
 
     // To put in class that inherit from FilterBase
 #define FILTERBASE_INIT                                                 \
-    virtual void Modified() { Superclass::Modified(); }                 \
+    using Superclass::SetInput;                                         \
+    using Superclass::Modified;                                         \
+    virtual void Modified() const { Superclass::Modified(); }           \
     virtual bool GetDebug() const { return Superclass::GetDebug(); }
 
     // Verbose options management
@@ -93,13 +95,13 @@ namespace clitk {
     itkGetConstMacro(CurrentStepBaseId, std::string);
     itkSetMacro(CurrentStepName, std::string);
     itkGetConstMacro(CurrentStepName, std::string);
-    
+
     void StartSubStep();
     void StopSubStep();
-    
+
     // Convenient function for verbose option
     template<class OptionType>
-    void VerboseOption(std::string name, OptionType value);    
+    void VerboseOption(std::string name, OptionType value);
     template<class OptionType>
     void VerboseOption(std::string name, int nb, OptionType value);
     template<class OptionType>
@@ -110,21 +112,21 @@ namespace clitk {
     itkSetMacro(VerboseWarningFlag, bool);
     itkGetConstMacro(VerboseWarningFlag, bool);
     itkBooleanMacro(VerboseWarningFlag);
-    
+
     // Use this function to cancel the filter between step
     void Cancel();
     bool Cancelled();
 
   protected:
     FilterBase();
-    virtual ~FilterBase() {}    
+    virtual ~FilterBase() {}
     void StartNewStep(std::string s, bool endl=true);
     template<class TInternalImageType>
     void StopCurrentStep(typename TInternalImageType::Pointer p, std::string txt="");
     void StopCurrentStep();
 
-    bool m_VerboseFlag;  
-    bool m_VerboseOptionFlag;  
+    bool m_VerboseFlag;
+    bool m_VerboseOptionFlag;
     bool m_VerboseStepFlag;
     bool m_VerboseMemoryFlag;
     bool m_VerboseImageSizeFlag;
@@ -141,11 +143,11 @@ namespace clitk {
 
     std::vector<int> m_SubstepNumbers;
     std::vector<std::string> m_SubstepID;
-	
+
   private:
     FilterBase(const Self&); //purposely not implemented
     void operator=(const Self&); //purposely not implemented
-    
+
   }; // end class
   //--------------------------------------------------------------------
 

@@ -20,15 +20,15 @@
 #include "vvToolBaseBase.h"
 
 //------------------------------------------------------------------------------
-void vvToolBaseBase::SaveState(std::auto_ptr<QXmlStreamWriter> & m_XmlWriter) 
-{ 
-  std::cerr << "SaveState not implemented for this tool." << std::endl; 
+void vvToolBaseBase::SaveState(std::auto_ptr<QXmlStreamWriter> & /* m_XmlWriter */)
+{
+  std::cerr << "SaveState not implemented for this tool." << std::endl;
 }
 //------------------------------------------------------------------------------
 
 
 //------------------------------------------------------------------------------
-void vvToolBaseBase::InitializeNewTool(bool ReadStateFlag) { 
+void vvToolBaseBase::InitializeNewTool(bool ReadStateFlag) {
   if (ReadStateFlag == true) {
     std::cerr << "ReadState not implemented for this tool." << std::endl;
   }

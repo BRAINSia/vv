@@ -30,7 +30,9 @@
  * even if its dim is < 4. */
 
 template<unsigned int Dim, class PixelType>
-static inline void ReadTimeSequence (vvImage::Pointer& vv_image, typename itk::Image<PixelType,Dim>::Pointer input, bool time_sequence=false)
+static inline void ReadTimeSequence(vvImage::Pointer& vv_image,
+                                    typename itk::Image<PixelType,Dim>::Pointer input,
+                                    bool /* xxtime_sequence=false */)
 {
   typedef itk::Image< PixelType, Dim > InputImageType;
   typedef itk::Image< PixelType,  Dim - 1 >    ItkImageType;

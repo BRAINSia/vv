@@ -53,6 +53,7 @@ class vvToolResample :
   std::string GetOutputFileName();
   static void Initialize();
   void apply();
+  using vvToolWidgetBase::InputIsSelected;
 
 public slots:
   //  void SetImagesList(QTreeWidget * tree);

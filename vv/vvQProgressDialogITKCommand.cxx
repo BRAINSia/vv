@@ -40,7 +40,7 @@ void vvQProgressDialogITKCommand::Initialize(QString title, float sec, int max)
 //====================================================================
 
 //====================================================================
-void vvQProgressDialogITKCommand::Execute(itk::Object *caller, const itk::EventObject & event)
+void vvQProgressDialogITKCommand::Execute(itk::Object *caller, const itk::EventObject & /* event */ )
 {
   i++;
   progress.setValue(i);
@@ -52,7 +52,8 @@ void vvQProgressDialogITKCommand::Execute(itk::Object *caller, const itk::EventO
 //====================================================================
 
 //====================================================================
-void vvQProgressDialogITKCommand::Execute(const itk::Object *caller, const itk::EventObject & event)
+void vvQProgressDialogITKCommand::Execute(const itk::Object */* caller */,
+                                          const itk::EventObject & /* event */)
 {
   i++;
   progress.setValue(i);

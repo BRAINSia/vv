@@ -62,7 +62,7 @@ namespace clitk
     void UpdateWithInputImageType();
 
   protected:
-    void Modified() {} // Need for using itkMacros
+    virtual void Modified() const {} // Need for using itkMacros
     template<unsigned int Dim> void InitializeImageType();
     ArgsInfoType mArgsInfo;
 

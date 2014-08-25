@@ -256,7 +256,7 @@ void vvBinaryImageOverlayActor::UpdateColor()
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-void vvBinaryImageOverlayActor::UpdateSlice(int slicer, int slice, bool force)
+void vvBinaryImageOverlayActor::UpdateSlice(int /* slicer */, int /* xxslice */, bool force)
 {
   if (!mSlicer) return;
 
@@ -342,7 +342,7 @@ void vvBinaryImageOverlayActor::ComputeExtent(int * inExtent, int * outExtent, v
 
 //------------------------------------------------------------------------------
 void vvBinaryImageOverlayActor::SetDisplayExtentAndCameraPosition(int orientation,
-								  int slice,
+								  int /* slice */,
 								  int * extent,
 								  vtkImageActor * actor,
 								  double position)

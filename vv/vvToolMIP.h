@@ -66,6 +66,7 @@ class vvToolMIP:
     ~vvToolMIP();
 
     static void Initialize();
+    using vvToolWidgetBase::InputIsSelected;
     virtual void InputIsSelected(vvSlicerManager * m);
     virtual void apply();
   protected:

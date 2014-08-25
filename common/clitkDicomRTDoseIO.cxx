@@ -335,20 +335,20 @@ void clitk::DicomRTDoseIO::Read(void * buffer)
 
 //--------------------------------------------------------------------
 // Write Image Information
-void clitk::DicomRTDoseIO::WriteImageInformation(bool keepOfStream)
+void clitk::DicomRTDoseIO::WriteImageInformation(bool /* keepOfStream */)
 {
 }
 
 //--------------------------------------------------------------------
 // Write Image Information
-bool clitk::DicomRTDoseIO::CanWriteFile(const char* FileNameToWrite)
+bool clitk::DicomRTDoseIO::CanWriteFile(const char* /* FileNameToWrite */)
 {
   return false;
 }
 
 //--------------------------------------------------------------------
 // Write Image
-void clitk::DicomRTDoseIO::Write(const void * buffer)
+void clitk::DicomRTDoseIO::Write(const void * /* buffer */)
 {
 }
 

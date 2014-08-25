@@ -68,7 +68,7 @@ template<class ImageType>
 void clitk::RegionGrowingGenericFilter<ArgsInfoType>::UpdateWithInputImageType() 
 { 
   DD("UpdateWithInputImageType");
-  const int Dimension = ImageType::ImageDimension;
+  const unsigned int Dimension = ImageType::ImageDimension;
 
   // ImageTypes
   typedef ImageType InputImageType;

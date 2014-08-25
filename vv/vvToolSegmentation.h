@@ -40,6 +40,7 @@ class vvToolSegmentation:
 
   //-----------------------------------------------------
   static void Initialize();
+  using vvToolWidgetBase::InputIsSelected;
   virtual void InputIsSelected(vvSlicerManager * m);
   void OpenBinaryImage();
   void RegionGrowing();

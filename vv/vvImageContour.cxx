@@ -322,7 +322,8 @@ void vvImageContour::UpdateActor(vtkActor * actor,
                                  vtkPolyDataMapper * mapper,
                                  vtkMarchingSquares * squares,
                                  vtkImageClip * clipper,
-                                 double threshold, int orientation, int slice) {
+                                 double threshold, int orientation, int /* slice */)
+{
   // Set parameter for the MarchigSquare
   squares->SetValue(0, threshold);
 

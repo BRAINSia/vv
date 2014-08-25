@@ -50,7 +50,7 @@ ADD_TOOL(vvToolROIManager);
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-vvToolROIManager::vvToolROIManager(vvMainWindowBase * parent, Qt::WindowFlags f):
+vvToolROIManager::vvToolROIManager(vvMainWindowBase * parent, Qt::WindowFlags /* f */):
   QWidget(parent->GetTab()),
   vvToolBase<vvToolROIManager>(parent),
   Ui::vvToolROIManager()
@@ -642,7 +642,7 @@ void vvToolROIManager::OpacityChanged(int v) {
 
 
 //------------------------------------------------------------------------------
-void vvToolROIManager::AllVisibleROIToggled(int b) {
+void vvToolROIManager::AllVisibleROIToggled(int /* b */) {
   bool status = false;
   if ((mCheckBoxShowAll->checkState() == Qt::Checked) ||
       (mCheckBoxShowAll->checkState() == Qt::PartiallyChecked))  status = true;
@@ -659,7 +659,7 @@ void vvToolROIManager::AllVisibleROIToggled(int b) {
 
 
 //------------------------------------------------------------------------------
-void vvToolROIManager::AllVisibleContourROIToggled(bool b) {
+void vvToolROIManager::AllVisibleContourROIToggled(bool /* b */) {
   bool status = false;
   if ((mContourCheckBoxShowAll->checkState() == Qt::Checked) ||
       (mContourCheckBoxShowAll->checkState() == Qt::PartiallyChecked))  status = true;

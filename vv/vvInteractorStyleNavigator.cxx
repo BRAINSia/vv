@@ -50,7 +50,7 @@ vvInteractorStyleNavigator::~vvInteractorStyleNavigator()
   CurrentRenderer=NULL;
 }
 
-void vvInteractorStyleNavigator::FindPokedRenderer(int dummy1,int dummy2)
+void vvInteractorStyleNavigator::FindPokedRenderer(int /* dummy1 */,int /* dummy2 */)
 {
   vtkRenderWindow * renwin=this->GetInteractor()->GetRenderWindow();
   renwin->GetRenderers()->InitTraversal();

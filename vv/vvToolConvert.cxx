@@ -37,7 +37,7 @@ std::vector<std::string> vvToolConvert::mListOfPixelTypeIcons;
 std::map<std::string, QAction*> vvToolConvert::mMapOfPixelType;
 
 //------------------------------------------------------------------------------
-vvToolConvert::vvToolConvert(vvMainWindowBase * parent, Qt::WindowFlags f):
+vvToolConvert::vvToolConvert(vvMainWindowBase * parent, Qt::WindowFlags /* f */):
   vvToolBase<vvToolConvert>(parent)
 {
 }

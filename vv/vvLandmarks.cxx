@@ -121,7 +121,7 @@ void vvLandmarks::RemoveLastLandmark()
 void vvLandmarks::RemoveLandmark(int index)
 {
   // erase a vtkPoint by shifiting the array .
-  // not a problem here because there are no 
+  // not a problem here because there are no
   // pologyons linking the points
   int t = mTime;//mLandmarks[index].coordinates[3];
   int npoints = mPoints[t]->GetNumberOfPoints();
@@ -209,7 +209,7 @@ bool vvLandmarks::LoadTxtFile(std::vector<std::string> filenames)
     mPoints[i]->SetNumberOfPoints(0);
   }
 
-  int err = 0;
+  unsigned int err = 0;
   for (unsigned int f = 0; f < filenames.size(); f++) {
     std::ifstream fp(filenames[f].c_str(), std::ios::in|std::ios::binary);
     if (!fp.is_open()) {
@@ -223,7 +223,7 @@ bool vvLandmarks::LoadTxtFile(std::vector<std::string> filenames)
       //    DD(line);
       std::string stringline = line;
       stringline += "\n";
-      
+
       if (first_line) {
         first_line=false;
         ///New landmark format: first line is "LANDMARKSXX", where XX is the version number
@@ -311,9 +311,9 @@ bool vvLandmarks::LoadTxtFile(std::vector<std::string> filenames)
 
   if (err > 0 && err == filenames.size())
     return false;
-  
+
   SetTime(0);
-  
+
   return true;
 }
 //--------------------------------------------------------------------
@@ -327,7 +327,7 @@ bool vvLandmarks::LoadPtsFile(std::vector<std::string> filenames)
     mLandmarks[i].clear();
   }
 
-  int err = 0;
+  unsigned int err = 0;
   for (unsigned int f = 0; f < filenames.size(); f++) {
     std::ifstream fp(filenames[f].c_str(), std::ios::in|std::ios::binary);
     if (!fp.is_open()) {
@@ -336,20 +336,20 @@ bool vvLandmarks::LoadPtsFile(std::vector<std::string> filenames)
     }
     vtkIdType idPoint;
     char line[255];
-    bool first_line=true;
+
     while (fp.getline(line,255)) {
       std::string stringline = line;
       stringline += "\n";
-      
+
       std::string separators = "\t\n\r ";
       if (stringline.size() > 1) {
         vvLandmark point;
-        int previousSpace = 0;
-        int space=0;
+        size_t previousSpace = 0;
+        size_t space = 0;
 
         if (stringline[0] == '#') // comments
           continue;
-        
+
         space = stringline.find_first_of(separators, previousSpace+1);
         if (space == std::string::npos) {
           ErrorMsg(mLandmarks.size(),"x position");
@@ -390,13 +390,13 @@ bool vvLandmarks::LoadPtsFile(std::vector<std::string> filenames)
       }
     }
   }
-  
+
   SetTime(0);
   DD("vvLandmarks::LoadPtsFile")
   if (err > 0 && err == filenames.size())
     return false;
 
-  
+
   return true;
 }
 //--------------------------------------------------------------------

@@ -22,7 +22,7 @@
 // qt
 #include <QApplication>
 
-// gdcm 
+// gdcm
 #include <gdcmFile.h>
 #if GDCM_MAJOR_VERSION == 2
 #include <gdcmReader.h>
@@ -116,7 +116,7 @@ std::vector<std::pair<int,std::string> > vvMeshReader::GetROINames()
   // get info on roi names
   vtkRTStructSetProperties * p = areader->GetRTStructSetProperties();
   int n = p->GetNumberOfStructureSetROIs();
-  
+
   for(unsigned int i=0; i<n; i++) {
     std::string name = p->GetStructureSetROIName(i);
     int nb = p->GetStructureSetROINumber(i);
@@ -124,7 +124,7 @@ std::vector<std::pair<int,std::string> > vvMeshReader::GetROINames()
   }
 
 #else
-#if GDCM_MAJOR_VERSION == 2 
+#if GDCM_MAJOR_VERSION == 2
 
     // duplicate code from  clitk::DicomRT_StructureSet::Read
     gdcm::Reader * reader = new gdcm::Reader;
@@ -165,19 +165,17 @@ std::vector<std::pair<int,std::string> > vvMeshReader::GetROINames()
     if (!b) { // FIXME
       clitkExceptionMacro("Error: tag 0x3006,0x0020 [ Structure Set ROI Sequence ] not found");
     }
-  
+
     const gdcm::DataElement &ssroisq = ds.GetDataElement( tssroisq );
     gdcm::SmartPointer<gdcm::SequenceOfItems> roi_seq = ssroisq.GetValueAsSQ();
     assert(roi_seq); // FIXME error message
-  
+
     for(unsigned int ridx = 0; ridx < roi_seq->GetNumberOfItems(); ++ridx)
       {
-         gdcm::Item & item = roi_seq->GetItem( ridx + 1); // Item starts at 1
 
-        const gdcm::Item & sitem = roi_seq->GetItem(ridx+1); // Item start at #1   
+        const gdcm::Item & sitem = roi_seq->GetItem(ridx+1); // Item start at #1
 
         const gdcm::DataSet& snestedds = sitem.GetNestedDataSet();
-        const gdcm::DataSet& nestedds = item.GetNestedDataSet();
 
         if( snestedds.FindDataElement( gdcm::Tag(0x3006,0x22) ) )
           {
@@ -190,11 +188,11 @@ std::vector<std::pair<int,std::string> > vvMeshReader::GetROINames()
             gdcm::Attribute<0x3006,0x0022> roinumber;
             roinumber.SetFromDataSet( snestedds );
             int nb = roinumber.GetValue();  // 0x3006,0x0022 = [ROI Number]
-          
+
             roi_names.push_back(make_pair(nb,name));
           }
       }
-  
+
     delete reader;
 
 #else
@@ -225,7 +223,7 @@ std::vector<vvMesh::Pointer> vvMeshReader::readSelectedContours()
 #if GDCM_MAJOR_VERSION == 2
 
 #if CLITK_USE_SYSTEM_GDCM == 0
-  
+
   clitkExceptionMacro("ERROR ! You need to compile vv with itk4 + system_gdcm to use this function");
 
 #endif

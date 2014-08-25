@@ -371,7 +371,7 @@ void vvToolWidgetBase::InputIsSelected()
 
 
 //------------------------------------------------------------------------------
-void vvToolWidgetBase::InputIsSelected(vvSlicerManager * m)
+void vvToolWidgetBase::InputIsSelected(vvSlicerManager * /* m */)
 {
   std::cerr << "You MUST overwrite this method vvToolWidgetBase::InputIsSelected(vvSlicerManager * m) if you use one single input" << std::endl;
   exit(0);

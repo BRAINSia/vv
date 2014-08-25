@@ -227,7 +227,7 @@ void vvToolCropImage::InputIsSelected(vvSlicerManager * slicer)
 
 
 //------------------------------------------------------------------------------
-void vvToolCropImage::autoCropValueChanged(double v)
+void vvToolCropImage::autoCropValueChanged(double /* v */)
 {
   //TODO
 }

@@ -371,10 +371,13 @@ QString vvDicomSeriesSelector::AddInfo(std::string n, std::string m)
 //====================================================================
 
 //====================================================================
+#if GDCM_MAJOR_VERSION == 2
+void vvDicomSeriesSelector::AddSerieToTheTable(int /* i */, std::vector<std::string> & /* filenames */)
+{
+}
+#else
 void vvDicomSeriesSelector::AddSerieToTheTable(int i, std::vector<std::string> & filenames)
 {
-#if GDCM_MAJOR_VERSION == 2
-#else
   gdcm::File *header = new gdcm::File();
   header->SetFileName(filenames[0]);
   header->SetMaxSizeLoadEntry(16384);
@@ -393,8 +396,8 @@ void vvDicomSeriesSelector::AddSerieToTheTable(int i, std::vector<std::string> &
   DD(ui.mTableWidget->rowCount());
   ui.mTableWidget->setItem(i, 0, newItem);
   */
-#endif
 }
+#endif
 //====================================================================
 
 #endif // VVDICOMSERIESSELECTOR_CXX

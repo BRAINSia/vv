@@ -216,7 +216,7 @@ void vvLinkPanel::addLink()
 
 
 //------------------------------------------------------------------------------
-void vvLinkPanel::removeLink(int row, int column)
+void vvLinkPanel::removeLink(int row, int /* column */)
 {
 //  DD(row);
 //   DD(column);

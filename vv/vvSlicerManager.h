@@ -327,7 +327,7 @@ protected:
   //Fusion of sequences related data
   int mFusionSequenceInvolvementCode; //-1: not involved, 0: main sequence(CT), 1: secondary sequence (US)
   int mFusionSequenceIndexLinkedManager; //index of the other sequence involved in the visualization
-  int mFusionSequenceFrameIndex; //temporal index of the current image in the sequence (<->TSlice)
+  unsigned int mFusionSequenceFrameIndex; //temporal index of the current image in the sequence (<->TSlice)
   unsigned int mFusionSequenceNbFrames; //number of frames in the temporal sequence
   bool mFusionSequenceSpatialSyncFlag, mFusionSequenceTemporalSyncFlag; //flags indicating whether the spatial/temporal synchronization are actives
   vtkSmartPointer<vtkMatrix4x4> mFusionSequenceMainTransform;

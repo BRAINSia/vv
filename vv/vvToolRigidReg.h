@@ -34,7 +34,10 @@ class vvToolRigidReg:
 public:
   vvToolRigidReg(vvMainWindowBase * parent=0, Qt::WindowFlags f=0);
   ~vvToolRigidReg();
+
   static void Initialize();
+  using vvToolWidgetBase::InputIsSelected;
+
   virtual void InputIsSelected(vvSlicerManager *input);
 
 public slots:

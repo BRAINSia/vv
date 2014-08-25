@@ -124,19 +124,19 @@ void clitk::EsrfHstImageIO::Read(void * buffer)
 
 //--------------------------------------------------------------------
 // Write Image Information
-void clitk::EsrfHstImageIO::WriteImageInformation(bool keepOfStream)
+void clitk::EsrfHstImageIO::WriteImageInformation(bool /* keepOfStream */)
 {
 }
 
 //--------------------------------------------------------------------
 // Write Image Information
-bool clitk::EsrfHstImageIO::CanWriteFile(const char* FileNameToWrite)
+bool clitk::EsrfHstImageIO::CanWriteFile(const char* /* xxFileNameToWrite */)
 {
   return false;
 }
 
 //--------------------------------------------------------------------
 // Write Image
-void clitk::EsrfHstImageIO::Write(const void * buffer)
+void clitk::EsrfHstImageIO::Write(const void * /* buffer */)
 {
 } ////

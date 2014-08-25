@@ -115,6 +115,7 @@ public:
   int GetTMax();
 
   void SetOpacity(double s);
+  using Superclass::SetRenderWindow;
   void SetRenderWindow(int orientation, vtkRenderWindow * rw);
   void SetDisplayMode(bool i);
   void FlipHorizontalView();

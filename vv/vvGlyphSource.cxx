@@ -138,7 +138,7 @@ int vvGlyphSource::RequestData(
 }
 
 void vvGlyphSource::CreateSpecificArrow(vtkPoints *pts, vtkCellArray *lines,
-                                        vtkCellArray *polys, vtkUnsignedCharArray *colors)
+                                        vtkCellArray */* polys */, vtkUnsignedCharArray *colors)
 {
   //stem
   vtkIdType ptIds[3];

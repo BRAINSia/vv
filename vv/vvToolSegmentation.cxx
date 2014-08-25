@@ -101,7 +101,7 @@ bool vvToolSegmentation::close()
   if (mRefMaskActor) mRefMaskActor->RemoveActors();
   DD("remo mask");
   if (mCurrentMaskActor) mCurrentMaskActor->RemoveActors();
-  for(int i=0; i<mCurrentCCLActors.size(); i++) {
+  for(unsigned int i=0; i<mCurrentCCLActors.size(); i++) {
     if (mCurrentCCLActors[i]) mCurrentCCLActors[i]->RemoveActors();
   }
   DD("wclose");
@@ -361,7 +361,7 @@ void vvToolSegmentation::Merge()
   
   DD("Merge");
   // Remove actors
-  for(int i=0; i<mCurrentCCLActors.size(); i++) {
+  for(unsigned int i=0; i<mCurrentCCLActors.size(); i++) {
     if (mCurrentCCLActors[i]) {
       mCurrentCCLActors[i]->SetVisible(false);
       mCurrentCCLActors[i]->RemoveActors();
@@ -459,7 +459,6 @@ void vvToolSegmentation::Labelize()
   mCurrentMaskActor->SetVisible(false);
   
   // Build CCL filter
-  vtkImageData* image = mCurrentMaskImage->GetVTKImages()[0];
   typedef args_info_clitkConnectedComponentLabeling ArgsInfoType;
   ArgsInfoType a;
   cmdline_parser_clitkConnectedComponentLabeling_init(&a);

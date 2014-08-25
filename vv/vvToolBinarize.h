@@ -41,6 +41,7 @@ class vvToolBinarize:
   //-----------------------------------------------------
   static void Initialize();
   void GetArgsInfoFromGUI();
+  using vvToolWidgetBase::InputIsSelected;
   virtual void InputIsSelected(vvSlicerManager * m);
 
   //-----------------------------------------------------
