@@ -32,12 +32,30 @@ ENDIF(ITK_FOUND)
 
 #=========================================================
 # Find VTK (required)
-FIND_PACKAGE(VTK REQUIRED)
-IF(VTK_FOUND)
-  INCLUDE("${VTK_USE_FILE}")
-ELSE(VTK_FOUND)
-  MESSAGE(FATAL_ERROR "Please set VTK_DIR.")
-ENDIF(VTK_FOUND)
+set(VTK_FOUND OFF)
+find_package(VTK COMPONENTS
+      vtkCommonSystem
+      vtkCommonCore
+      vtkCommonSystem
+      vtkCommonMath
+      vtkCommonMisc
+      vtkCommonTransforms
+      vtkIOLegacy
+      vtkIOXML
+      vtkImagingStencil
+      vtkFiltersModeling
+      vtkInteractionImage
+      vtkRenderingAnnotation
+      vtkImagingStatistics
+      vtkGUISupportQt
+      vtkIOMovie
+      vtkImagingMorphological
+      vtkImagingMath
+      REQUIRED)
+if(VTK_USE_FILE)
+  include(${VTK_USE_FILE})
+endif()
+
 #=========================================================
 
 #=========================================================
