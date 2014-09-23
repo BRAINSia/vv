@@ -51,6 +51,7 @@ find_package(VTK COMPONENTS
       vtkIOMovie
       vtkImagingMorphological
       vtkImagingMath
+      vtkRenderingLOD
       REQUIRED)
 if(VTK_USE_FILE)
   include(${VTK_USE_FILE})

@@ -247,7 +247,7 @@ static int global_len;
 static int nki_private_decompress(short int *dest, signed char *src, int size)
 {
   int			npixels, retvalue, mode, iMode, val, j;
-  NKI_MODE2*		pHeader = (NKI_MODE2*)src;
+  NKI_MODE2*		pHeader = reinterpret_cast<NKI_MODE2 *>(src);
   unsigned long		iCRC=0, iCRC2=0;
   //unsigned char*	pDestStart = (unsigned char*)dest;
   signed char           *save, *end;

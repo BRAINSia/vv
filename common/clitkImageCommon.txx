@@ -277,7 +277,7 @@ int ComputeHowManyDifferentIntensity(const typename ImageType::Pointer & image,
 template<class InputImageType, class MaskImageType>
 void ComputeWeightsOfEachClasses(const typename InputImageType::Pointer & input,
                                  const typename MaskImageType::Pointer & mask,
-                                 const std::vector<typename MaskImageType::PixelType> & listOfIntensities,
+                                 const std::vector<typename MaskImageType::PixelType> & /* listOfIntensities */,
                                  std::map<typename MaskImageType::PixelType,
                                  std::map<typename InputImageType::PixelType, double> > & mapOfLabelsAndWeights)
 {
